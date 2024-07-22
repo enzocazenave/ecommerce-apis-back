@@ -1,0 +1,12 @@
+package com.apis.ecommerce.services;
+
+import org.springframework.stereotype.Service;
+
+import com.apis.ecommerce.entities.User;
+import com.apis.ecommerce.exceptions.UserDuplicateException;
+
+@Service
+public interface UsersService {
+    public User registerUser(String name, String surname, String email, String password) throws UserDuplicateException;
+    public User loginUser(String email, String password);
+}
