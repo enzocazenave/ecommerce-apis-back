@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apis.ecommerce.entities.Product;
 import com.apis.ecommerce.entities.dto.ProductRequest;
 import com.apis.ecommerce.entities.dto.ProductUpdateRequest;
+import com.apis.ecommerce.exceptions.CategoryNonexistentException;
 import com.apis.ecommerce.exceptions.ProductDuplicateException;
 import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import com.apis.ecommerce.services.ProductService;
@@ -61,7 +62,7 @@ public class ProductController {
     }
     
     @PostMapping("/update")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException {
+    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException, CategoryNonexistentException {
         productsService.updateProduct(productUpdateRequest);
         return ResponseEntity.ok("Producto editado con exito");
     }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.apis.ecommerce.entities.Category;
+import com.apis.ecommerce.entities.Product;
 import com.apis.ecommerce.exceptions.CategoryDuplicateException;
 import com.apis.ecommerce.exceptions.CategoryHasProductsException;
 import com.apis.ecommerce.repositories.CategoriesRepository;
@@ -15,6 +16,8 @@ import com.apis.ecommerce.repositories.CategoriesRepository;
 public class CategoriesServiceImpl implements CategoriesService {
     @Autowired
     private CategoriesRepository categoriesRepository;
+    @Autowired 
+    private ProductService productService;
 
     public List<Category> getCategories() {
         return categoriesRepository.findAllActive();
@@ -38,6 +41,12 @@ public class CategoriesServiceImpl implements CategoriesService {
         
         if (!category.isPresent()) {
             return Optional.empty();
+        }
+
+        List<Product> productsOfCategory = productService.getProductsByCategoryId(id);
+
+        if (!productsOfCategory.isEmpty()) {
+            throw new CategoryHasProductsException();
         }
 
         category.get().setStatus(false);
