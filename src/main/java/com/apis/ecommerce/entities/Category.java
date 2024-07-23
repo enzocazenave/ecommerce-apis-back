@@ -10,7 +10,8 @@ import lombok.Data;
 @Data
 @Entity
 public class Category {
-    public Category() {}
+    public Category() {
+    }
 
     public Category(String name) {
         this.name = name;
@@ -19,7 +20,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column
     private String name;
 }
