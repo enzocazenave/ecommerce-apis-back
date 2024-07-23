@@ -29,7 +29,4 @@ public class Category {
 
     @Column
     private boolean status = true;
-
-    @OneToMany (mappedBy = "category")
-    private List<Product> products;
 }
