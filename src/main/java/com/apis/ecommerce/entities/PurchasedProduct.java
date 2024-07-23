@@ -1,7 +1,7 @@
 package com.apis.ecommerce.entities;
 
 import jakarta.persistence.*;
-import lombok.Cleanup;
+
 import lombok.Data;
 
 import java.util.Date;

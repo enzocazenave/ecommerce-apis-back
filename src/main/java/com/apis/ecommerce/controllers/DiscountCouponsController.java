@@ -1,7 +1,6 @@
 package com.apis.ecommerce.controllers;
 
 import com.apis.ecommerce.entities.DiscountCoupon;
-import com.apis.ecommerce.entities.PurchaseOrder;
 import com.apis.ecommerce.entities.dto.DiscountCouponRequest;
 import com.apis.ecommerce.services.DiscountCouponsService;
 import org.springframework.beans.factory.annotation.Autowired;
