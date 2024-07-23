@@ -43,7 +43,5 @@ public class User {
 
     @Column
     private boolean status = true;
-    
-    @OneToMany(mappedBy = "user")
-    private List<PurchaseOrder> PurchaseOrders;
+
 }

@@ -7,6 +7,7 @@ import com.apis.ecommerce.repositories.DiscountCouponsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,18 +52,23 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
             discountCoupon.setPercentage(discountCouponRequest.getPercentage());
         }
 
+        discountCoupon.setLastUpdated(new Date());
         DiscountCoupon updatedDiscountCoupon = discountCouponRepository.save(discountCoupon);
         return Optional.of(updatedDiscountCoupon);
     }
 
 
     public Optional<DiscountCoupon> deleteDiscountCouponById(Long id) {
-        Optional<DiscountCoupon> discountCoupon = discountCouponRepository.findById(id);
-        if (!discountCoupon.isPresent()) {
-            return null;
+        Optional<DiscountCoupon> discountCouponOptional = discountCouponRepository.findById(id);
+
+        if (!discountCouponOptional.isPresent()) {
+            return Optional.empty();
         }
-        discountCoupon.get().setStatus(DiscountStatus.EXPIRED);
-        DiscountCoupon updatedDiscountCoupon = discountCouponRepository.save(discountCoupon.get());
+
+        DiscountCoupon discountCoupon = discountCouponOptional.get();
+        discountCoupon.setStatus(DiscountStatus.EXPIRED);
+        discountCoupon.setLastUpdated(new Date());
+        DiscountCoupon updatedDiscountCoupon = discountCouponRepository.save(discountCoupon);
 
         return Optional.of(updatedDiscountCoupon);
 

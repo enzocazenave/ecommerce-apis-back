@@ -1,10 +1,13 @@
 package com.apis.ecommerce.entities;
 
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
+import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
+import com.apis.ecommerce.entities.dto.UserRequest;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,13 +16,6 @@ import java.util.List;
 public class PurchaseOrder {
     public PurchaseOrder() {
 
-    }
-
-    public PurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) {
-        this.setUser(purchaseOrderRequest.getUser());
-        this.setTotalPrice(purchaseOrderRequest.getTotalPrice());
-        this.setStatus(purchaseOrderRequest.getStatus());
-        this.setDateCreated(new Date());
     }
 
     @Id
@@ -43,6 +39,6 @@ public class PurchaseOrder {
     private List<PurchasedProduct> purchasedProducts;
 
     @ManyToOne
-    @JoinColumn(name = "discountCoupon_id", nullable = true)
+    @JoinColumn(name = "discountCoupon_id", nullable = false)
     private DiscountCoupon discountCoupon;
 }

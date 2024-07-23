@@ -1,14 +1,12 @@
 package com.apis.ecommerce.services;
 
-import com.apis.ecommerce.entities.DiscountCoupon;
-import com.apis.ecommerce.entities.Product;
-import com.apis.ecommerce.entities.PurchaseOrder;
-import com.apis.ecommerce.entities.PurchasedProduct;
+import com.apis.ecommerce.entities.*;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
 import com.apis.ecommerce.repositories.ProductRepository;
 import com.apis.ecommerce.repositories.PurchaseOrdersRepository;
+import com.apis.ecommerce.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +23,9 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UsersRepository usersRepository;
 
     public Optional<PurchaseOrder> getPurchaseOrderById(Long id) {
         return purchaseOrderRepository.findById(id);
@@ -47,13 +48,9 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
 
     public PurchaseOrder createPurchaseOrderwithDiscountCode(DiscountCoupon discountCoupon, PurchaseOrderRequest purchaseOrderRequest) {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
-        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
-        purchaseOrder.setDateCreated(new Date());
-        purchaseOrder.setUser(purchaseOrderRequest.getUser());
-        purchaseOrder.setDiscountCoupon(discountCoupon);
-
         Double totalPrice = 0.0;
         List<PurchasedProduct> purchasedProducts = new ArrayList<>();
+
         for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
             Optional<Product> productOptional = productRepository.findById(purchasedProductRequest.getProductId());
             if (!productOptional.isPresent()) {
@@ -73,15 +70,47 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             totalPrice = totalPrice + (purchasedProduct.getPrice() * purchasedProduct.getUnit());
 
             purchasedProducts.add(purchasedProduct);
+
+            productOptional.get().setStock(productOptional.get().getStock() - purchasedProductRequest.getUnit());
+            productRepository.save(productOptional.get());
         }
+
+        Optional<User> user = usersRepository.findById(purchaseOrderRequest.getUserId());
+        purchaseOrder.setUser(user.get());
+        purchaseOrder.setDateCreated(new Date());
+        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
+        purchaseOrder.setDiscountCoupon(discountCoupon);
         purchaseOrder.setTotalPrice(totalPrice - totalPrice * discountCoupon.getPercentage());
         purchaseOrder.setPurchasedProducts(purchasedProducts);
 
-        return purchaseOrder;
+
+        return purchaseOrderRepository.save(purchaseOrder);
     }
 
     public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) {
-        PurchaseOrder purchaseOrder = new PurchaseOrder(purchaseOrderRequest);
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+
+        Optional<User> user = usersRepository.findById(purchaseOrderRequest.getUserId());
+        purchaseOrder.setUser(user.get());
+        Double totalPrice = 0.0;
+
+        List<PurchasedProduct> purchasedProducts = new ArrayList<>();
+        for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
+            PurchasedProduct purchasedProduct = new PurchasedProduct();
+            purchasedProduct.setProductId(purchasedProductRequest.getProductId());
+            purchasedProduct.setPrice(purchasedProductRequest.getPrice());
+            purchasedProduct.setUnit(purchasedProductRequest.getUnit());
+
+            totalPrice = totalPrice + (purchasedProduct.getPrice() * purchasedProductRequest.getUnit());
+            purchasedProducts.add(purchasedProduct);
+        }
+
+        purchaseOrder.setPurchasedProducts(purchasedProducts);
+        purchaseOrder.setDateCreated(new Date());
+        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
+        purchaseOrder.setDiscountCoupon(new DiscountCoupon());
+        purchaseOrder.setTotalPrice(totalPrice);
+
         return purchaseOrderRepository.save(purchaseOrder);
     }
 }

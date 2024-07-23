@@ -37,18 +37,20 @@ public class PurchaseOrdersController {
         return purchaseOrderService.getAllPurchaseOrders();
     }
 
-    @PostMapping
-    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest purchaseOrderRequest, @RequestParam(value = "discountCode", required = false) String discountCode) {
+    @PostMapping("/code/{discountCode}")
+    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest purchaseOrderRequest, @PathVariable String discountCode ) {
 
         PurchaseOrder createdPurchaseOrder;
 
         if (discountCode != null && !discountCode.isEmpty()) {
             ResponseEntity<List<DiscountCoupon>> discountCoupons = discountCouponsController.getDiscountCouponByDiscountCode(discountCode);
 
+            //TODO Al usar el cupon debo descontar ese uso
+
             //TODO select some discount coupon
             @SuppressWarnings("null")
             DiscountCoupon discountCoupon = discountCoupons.getBody().getFirst();
-            createdPurchaseOrder = purchaseOrderService.createPurchaseOrderwithDiscountCode(discountCoupon, purchaseOrderRequest);
+            purchaseOrderService.createPurchaseOrderwithDiscountCode(discountCoupon, purchaseOrderRequest);
         }
         createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderRequest);
         return ResponseEntity.ok(createdPurchaseOrder);

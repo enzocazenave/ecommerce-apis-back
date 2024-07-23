@@ -9,10 +9,6 @@ import java.util.List;
 
 @Data
 public class PurchaseOrderRequest {
-    private Long id;
-    private User user;
-    private Double totalPrice;
-    private PurchaseOrderStatus Status;
+    private Long userId;
     private List<PurchasedProductRequest> purchasedProductRequests;
-    private Date DateCreated;
 }
