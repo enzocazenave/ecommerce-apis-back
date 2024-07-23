@@ -22,14 +22,6 @@ public class Product {
         this.size = size;
     }
 
-    public Product(Product p) {
-        this.name = p.name;
-        this.stock = p.stock;
-        this.price = p.price;
-        this.description = p.description;
-        this.size = p.size;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

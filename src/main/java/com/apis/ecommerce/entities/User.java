@@ -13,9 +13,21 @@ import lombok.Data;
 @Entity
 @Data
 public class User {
+    public User() {}
+
+    public User(String name, String surname, String email, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column
+    private boolean admin;
 
     @Column
     private String name;
@@ -29,6 +41,9 @@ public class User {
     @Column
     private String password;
 
+    @Column
+    private boolean status = true;
+    
     @OneToMany(mappedBy = "user")
     private List<PurchaseOrder> PurchaseOrders;
 }
