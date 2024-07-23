@@ -19,4 +19,6 @@ public interface ProductRepository extends JpaRepository <Product, Long> {
     @Query("UPDATE Product c SET c.stock = -1  WHERE c.id = ?1")
     List<Product> removedLogical(Long id);
     
+    @Query("SELECT c FROM Product c WHERE c.category.id = ?1")
+    List<Product> findByCategoryId(Long id);
 }
