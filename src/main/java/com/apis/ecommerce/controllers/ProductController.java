@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apis.ecommerce.entities.Product;
@@ -19,6 +22,7 @@ import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import com.apis.ecommerce.services.ProductService;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -28,8 +32,13 @@ public class ProductController {
     private ProductService productsService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
-        return ResponseEntity.ok(productsService.getProduct());
+    public ResponseEntity<Page<Product>> getProducts(
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size
+    ) {
+        if (page == null || size == null)
+            return ResponseEntity.ok(productsService.getProduct(PageRequest.of(0, Integer.MAX_VALUE)));
+        return ResponseEntity.ok(productsService.getProduct(PageRequest.of(page, size)));
     }
 
     @GetMapping("/categories/{id}")
@@ -60,7 +69,7 @@ public class ProductController {
         return ResponseEntity.ok("Producto eliminado con exito");
     }
     
-    @PostMapping("/update")
+    @PutMapping
     public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException {
         productsService.updateProduct(productUpdateRequest);
         return ResponseEntity.ok("Producto editado con exito");
