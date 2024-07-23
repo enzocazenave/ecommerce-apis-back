@@ -63,22 +63,15 @@ public class ProductController {
     
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) throws ProductNonexistentException {
-        Optional<Product> product = productsService.deleteProduct(id);
-        /*Revisar este caso */
-        if (product.isPresent()) {
-            return ResponseEntity.ok("Producto eliminado con exito");
-        }
-        return ResponseEntity.noContent().build();
+        productsService.deleteProduct(id);
+        return ResponseEntity.ok("Producto eliminado con exito");
     }
     
     @PostMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id) throws ProductNonexistentException {
-        Optional<Product> product = productsService.updateProduct(id);
+        productsService.updateProduct(id);
         /*Revisar este caso */
-        if (product.isPresent()) {
-            return ResponseEntity.ok("Producto eliminado con exito");
-        }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Producto eliminado con exito");
     }
 
     
