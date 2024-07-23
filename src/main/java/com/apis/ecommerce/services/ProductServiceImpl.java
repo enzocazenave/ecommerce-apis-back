@@ -32,6 +32,10 @@ public class ProductServiceImpl implements  ProductService{
         return productRepository.findById(id);
     }
 
+    public List<Product> getProductsByCategoryId(Long id) {
+        return productRepository.findByCategoryId(id);
+    }
+
     public Product createProduct(ProductRequest p) throws ProductDuplicateException {
         if (!productRepository.findByName(p.getName()).isEmpty()) {
             throw new ProductDuplicateException();
