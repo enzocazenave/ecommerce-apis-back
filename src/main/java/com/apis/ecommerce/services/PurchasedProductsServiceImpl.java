@@ -1,6 +1,5 @@
 package com.apis.ecommerce.services;
 
-import com.apis.ecommerce.entities.DiscountCoupon;
 import com.apis.ecommerce.entities.PurchasedProduct;
 import com.apis.ecommerce.repositories.PurchasedProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;

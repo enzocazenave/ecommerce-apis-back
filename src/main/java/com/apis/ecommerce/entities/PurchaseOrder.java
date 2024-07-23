@@ -1,6 +1,5 @@
 package com.apis.ecommerce.entities;
 
-import com.apis.ecommerce.entities.dto.DiscountCouponRequest;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
 import jakarta.persistence.*;
