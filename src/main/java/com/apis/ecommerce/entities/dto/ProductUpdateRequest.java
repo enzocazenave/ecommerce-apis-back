@@ -10,4 +10,5 @@ public class ProductUpdateRequest {
     private double price;
     private String description;
     private String size;
+    private Long idCategory;
 }

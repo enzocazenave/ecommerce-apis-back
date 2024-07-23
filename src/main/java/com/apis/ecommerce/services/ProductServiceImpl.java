@@ -12,6 +12,7 @@ import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.Product;
 import com.apis.ecommerce.entities.dto.ProductRequest;
 import com.apis.ecommerce.entities.dto.ProductUpdateRequest;
+import com.apis.ecommerce.exceptions.CategoryNonexistentException;
 import com.apis.ecommerce.exceptions.ProductDuplicateException;
 import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import com.apis.ecommerce.repositories.CategoriesRepository;
@@ -59,11 +60,13 @@ public class ProductServiceImpl implements  ProductService{
         //productRepository.removedLogical(id); //borrado logico
     }
 
-    public void updateProduct(ProductUpdateRequest productRequest) throws ProductNonexistentException {
+    public void updateProduct(ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException {
         Optional<Product> p = productRepository.findById(productRequest.getId());
+
         if(p.isEmpty()) {
            throw new ProductNonexistentException();     
         }
+
         Product product = p.get();
         product.setName(productRequest.getName());
         product.setStock(productRequest.getStock()); 
@@ -71,6 +74,13 @@ public class ProductServiceImpl implements  ProductService{
         product.setDescription(productRequest.getDescription());
         product.setSize(productRequest.getSize());
 
+        Optional<Category> category = categoriesRepository.findById(productRequest.getIdCategory());
+
+        if (category.isEmpty()) {
+            throw new CategoryNonexistentException();
+        }
+
+        product.setCategory(category.get());
         productRepository.save(product);
     }
 
