@@ -1,17 +1,17 @@
 package com.apis.ecommerce.services;
 
 import com.apis.ecommerce.entities.DiscountCoupon;
-import com.apis.ecommerce.repositories.DiscountCouponRepository;
+import com.apis.ecommerce.repositories.DiscountCouponsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DiscountCouponServiceImpl implements DiscountCouponService {
+public class DiscountCouponsServiceImpl implements DiscountCouponsService {
 
     @Autowired
-    private DiscountCouponRepository discountCouponRepository;
+    private DiscountCouponsRepository discountCouponRepository;
 
     public DiscountCoupon createDiscountCoupon(DiscountCoupon discountCoupon) {
         return discountCouponRepository.save(discountCoupon);

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface DiscountCouponService {
+public interface DiscountCouponsService {
     public DiscountCoupon createDiscountCoupon(DiscountCoupon discountCoupon);
 
     public DiscountCoupon getDiscountCouponById(Long id);

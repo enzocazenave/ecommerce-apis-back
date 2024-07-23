@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface PurchaseOrderService {
+public interface PurchaseOrdersService {
     public PurchaseOrder getPurchaseOrder(Long id);
 
     public List<PurchaseOrder> getAllPurchaseOrders();

@@ -1,10 +1,8 @@
 package com.apis.ecommerce.controllers;
 
-import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.DiscountCoupon;
-import com.apis.ecommerce.entities.dto.CategoryRequest;
 import com.apis.ecommerce.exceptions.CategoryDuplicateException;
-import com.apis.ecommerce.services.DiscountCouponService;
+import com.apis.ecommerce.services.DiscountCouponsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/discount_coupons")
-public class DiscountCouponController {
+public class DiscountCouponsController {
     @Autowired
-    private DiscountCouponService discountCouponService;
+    private DiscountCouponsService discountCouponService;
 
     @GetMapping
     public List<DiscountCoupon> getDiscountCoupons() {

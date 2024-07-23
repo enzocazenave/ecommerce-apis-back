@@ -1,7 +1,7 @@
 package com.apis.ecommerce.controllers;
 
 import com.apis.ecommerce.entities.PurchasedProduct;
-import com.apis.ecommerce.services.PurchasedProductService;
+import com.apis.ecommerce.services.PurchasedProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/purchase_products")
-public class PurchasedProductController {
+public class PurchasedProductsController {
     @Autowired
-    private PurchasedProductService purchasedProductService;
+    private PurchasedProductsService purchasedProductService;
 
     @GetMapping("/{id}")
     public PurchasedProduct getPurchasedProductById(Long id) {

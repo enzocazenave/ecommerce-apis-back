@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface PurchasedProductService {
+public interface PurchasedProductsService {
     public PurchasedProduct createPurchasedProduct(PurchasedProduct purchasedProduct);
 
     public PurchasedProduct getPurchasedProductById(Long id);

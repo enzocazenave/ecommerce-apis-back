@@ -1,17 +1,17 @@
 package com.apis.ecommerce.services;
 
 import com.apis.ecommerce.entities.PurchaseOrder;
-import com.apis.ecommerce.repositories.PurchaseOrderRepository;
+import com.apis.ecommerce.repositories.PurchaseOrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class PurchaseOrderServiceImpl implements PurchaseOrderService {
+public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
 
     @Autowired
-    private PurchaseOrderRepository purchaseOrderRepository;
+    private PurchaseOrdersRepository purchaseOrderRepository;
 
     public PurchaseOrder getPurchaseOrder(Long id) {
         return purchaseOrderRepository.findById(id).get();
