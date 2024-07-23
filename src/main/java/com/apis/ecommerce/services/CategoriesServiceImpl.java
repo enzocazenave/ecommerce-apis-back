@@ -40,10 +40,6 @@ public class CategoriesServiceImpl implements CategoriesService {
             return Optional.empty();
         }
 
-        if (category.get().getProducts().size() > 0) {
-            throw new CategoryHasProductsException();
-        }
-
         category.get().setStatus(false);
         categoriesRepository.save(category.get());
 
