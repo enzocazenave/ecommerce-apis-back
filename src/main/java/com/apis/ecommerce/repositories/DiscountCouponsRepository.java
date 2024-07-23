@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DiscountCouponsRepository extends JpaRepository<DiscountCoupon, Long> {
 
     @Query("SELECT d FROM DiscountCoupon d WHERE d.code = ?1")
-    List<DiscountCoupon> findByCode(String code);
+    Optional<DiscountCoupon> findByCode(String code);
 }

@@ -1,8 +1,10 @@
 package com.apis.ecommerce.services;
 
-import com.apis.ecommerce.entities.DiscountCoupon;
 import com.apis.ecommerce.entities.PurchaseOrder;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
+import com.apis.ecommerce.exceptions.InsufficientStockException;
+import com.apis.ecommerce.exceptions.InvalidPriceOrUnitProductException;
+import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,14 +12,11 @@ import java.util.Optional;
 
 @Service
 public interface PurchaseOrdersService {
-    public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest);
+    PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) throws InvalidPriceOrUnitProductException, InsufficientStockException, ProductNonexistentException;
 
-    public Optional<PurchaseOrder> getPurchaseOrderById(Long id);
+    Optional<PurchaseOrder> getPurchaseOrderById(Long id);
 
-    public List<PurchaseOrder> getAllPurchaseOrders();
+    List<PurchaseOrder> getAllPurchaseOrders();
 
-    public PurchaseOrder deletePurchaseOrderById(Long id);
-
-    public PurchaseOrder createPurchaseOrderwithDiscountCode(DiscountCoupon discountCoupon, PurchaseOrderRequest purchaseOrderRequest);
-
+    PurchaseOrder deletePurchaseOrderById(Long id);
 }

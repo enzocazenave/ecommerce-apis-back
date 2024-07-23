@@ -62,9 +62,9 @@ public class DiscountCouponsController {
     }
 
     @GetMapping("/code/{code}")
-    public ResponseEntity<List<DiscountCoupon>> getDiscountCouponByDiscountCode(@PathVariable String code) {
-        List<DiscountCoupon> discountCoupons = discountCouponService.getDiscountCouponByCode(code);
-        return ResponseEntity.ok(discountCoupons);
+    public ResponseEntity<DiscountCoupon> getDiscountCouponByDiscountCode(@PathVariable String code) {
+        Optional<DiscountCoupon>  discountCoupons = discountCouponService.getDiscountCouponByCode(code);
+        return ResponseEntity.ok(discountCoupons.get());
     }
 }
 

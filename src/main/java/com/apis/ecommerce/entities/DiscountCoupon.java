@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,7 +16,7 @@ public class DiscountCoupon {
     }
 
     public DiscountCoupon(DiscountCouponRequest discountCouponRequest) {
-        this.count = discountCouponRequest.getCount();
+        this.availableQuantity = discountCouponRequest.getAvailableQuantity();
         this.code = discountCouponRequest.getCode();
         this.status = discountCouponRequest.getStatus();
         this.percentage = discountCouponRequest.getPercentage();
@@ -30,7 +29,7 @@ public class DiscountCoupon {
     private Long id;
 
     @Column
-    private int count;
+    private int availableQuantity;
 
     @Column
     private String code;

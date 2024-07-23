@@ -3,11 +3,10 @@ package com.apis.ecommerce.services;
 import com.apis.ecommerce.entities.*;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
-import com.apis.ecommerce.enums.DiscountStatus;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
-import com.apis.ecommerce.repositories.ProductRepository;
+import com.apis.ecommerce.exceptions.InsufficientStockException;
+import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import com.apis.ecommerce.repositories.PurchaseOrdersRepository;
-import com.apis.ecommerce.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +22,72 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
     private PurchaseOrdersRepository purchaseOrderRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductService productService;
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UsersService usersService;
+
+    @Autowired
+    private DiscountCouponsService discountCouponsService;
+
+    public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) throws InsufficientStockException, ProductNonexistentException {
+        //TotalPrice
+        double totalPrice = 0.0;
+        List<PurchasedProduct> purchasedProducts = new ArrayList<>();
+
+        for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
+            Double price = purchasedProductRequest.getPrice();
+            Integer units = purchasedProductRequest.getUnits();
+            Long productId = purchasedProductRequest.getProductId();
+
+            Optional<Product> productOptional = productService.getProductById(productId);
+            if (productOptional.isEmpty()) {
+                throw new ProductNonexistentException();
+            }
+
+            Product product = productOptional.get();
+
+            if (product.getStock() < units) {
+                throw new InsufficientStockException();
+            }
+
+            PurchasedProduct purchasedProduct = new PurchasedProduct();
+            purchasedProduct.setPrice(price);
+            purchasedProduct.setUnit(units);
+            purchasedProduct.setProductId(productId);
+            totalPrice += price * units;
+            purchasedProducts.add(purchasedProduct);
+
+            productService.reduceStockBy(productId, units);
+        }
+
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setTotalPrice(totalPrice);
+
+        //DiscountCoupon logic
+        Optional<DiscountCoupon> discountCouponOptional = discountCouponsService.getDiscountCouponByCode(purchaseOrderRequest.getDiscountCode());
+        if (discountCouponOptional.isPresent()) {
+            DiscountCoupon discountCoupon = discountCouponOptional.get();
+
+            purchaseOrder.setTotalPrice(totalPrice - totalPrice * discountCoupon.getPercentage() / 100);
+            purchaseOrder.setDiscountCoupon(discountCoupon);
+            discountCouponsService.reduceStockByOne(discountCoupon.getId());
+        }
+
+        purchaseOrder.setPurchasedProducts(purchasedProducts);
+        purchaseOrder.setDateCreated(new Date());
+        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
+        purchaseOrder.setDiscountCoupon(new DiscountCoupon());
+
+        //User Logic
+        Optional<User> user = usersService.getUserById(purchaseOrderRequest.getUserId());
+        if (user.isEmpty()) {
+            return null;
+        }
+        purchaseOrder.setUser(user.get());
+
+        return purchaseOrderRepository.save(purchaseOrder);
+    }
 
     public Optional<PurchaseOrder> getPurchaseOrderById(Long id) {
         return purchaseOrderRepository.findById(id);
@@ -36,82 +97,12 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
         return purchaseOrderRepository.findAll();
     }
 
-    @Override
     public PurchaseOrder deletePurchaseOrderById(Long id) {
-
         Optional<PurchaseOrder> purchaseOrder = purchaseOrderRepository.findById(id);
-        if (!purchaseOrder.isPresent()) {
+        if (purchaseOrder.isEmpty()) {
             return null;
         }
         purchaseOrder.get().setStatus(PurchaseOrderStatus.DELETED);
         return purchaseOrderRepository.save(purchaseOrder.get());
-    }
-
-    public PurchaseOrder createPurchaseOrderwithDiscountCode(DiscountCoupon discountCoupon, PurchaseOrderRequest purchaseOrderRequest) {
-        PurchaseOrder purchaseOrder = new PurchaseOrder();
-        Double totalPrice = 0.0;
-        List<PurchasedProduct> purchasedProducts = new ArrayList<>();
-
-        for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
-            Optional<Product> productOptional = productRepository.findById(purchasedProductRequest.getProductId());
-            if (!productOptional.isPresent()) {
-                return null;
-            }
-
-            if (productOptional.get().getStock() < 0) {
-                //TODO: BadRequest because we have not stock available
-                return null;
-            }
-
-            PurchasedProduct purchasedProduct = new PurchasedProduct();
-            purchasedProduct.setPrice(purchasedProductRequest.getPrice());
-            purchasedProduct.setUnit(purchasedProductRequest.getUnit());
-            purchasedProduct.setProductId(purchasedProductRequest.getProductId());
-
-            totalPrice = totalPrice + (purchasedProduct.getPrice() * purchasedProduct.getUnit());
-
-            purchasedProducts.add(purchasedProduct);
-
-            productOptional.get().setStock(productOptional.get().getStock() - purchasedProductRequest.getUnit());
-            productRepository.save(productOptional.get());
-        }
-
-        Optional<User> user = usersRepository.findById(purchaseOrderRequest.getUserId());
-        purchaseOrder.setUser(user.get());
-        purchaseOrder.setDateCreated(new Date());
-        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
-        purchaseOrder.setDiscountCoupon(discountCoupon);
-        purchaseOrder.setTotalPrice(totalPrice - totalPrice * discountCoupon.getPercentage());
-        purchaseOrder.setPurchasedProducts(purchasedProducts);
-
-
-        return purchaseOrderRepository.save(purchaseOrder);
-    }
-
-    public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) {
-        PurchaseOrder purchaseOrder = new PurchaseOrder();
-
-        Optional<User> user = usersRepository.findById(purchaseOrderRequest.getUserId());
-        purchaseOrder.setUser(user.get());
-        Double totalPrice = 0.0;
-
-        List<PurchasedProduct> purchasedProducts = new ArrayList<>();
-        for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
-            PurchasedProduct purchasedProduct = new PurchasedProduct();
-            purchasedProduct.setProductId(purchasedProductRequest.getProductId());
-            purchasedProduct.setPrice(purchasedProductRequest.getPrice());
-            purchasedProduct.setUnit(purchasedProductRequest.getUnit());
-
-            totalPrice = totalPrice + (purchasedProduct.getPrice() * purchasedProductRequest.getUnit());
-            purchasedProducts.add(purchasedProduct);
-        }
-
-        purchaseOrder.setPurchasedProducts(purchasedProducts);
-        purchaseOrder.setDateCreated(new Date());
-        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
-        purchaseOrder.setDiscountCoupon(new DiscountCoupon());
-        purchaseOrder.setTotalPrice(totalPrice);
-
-        return purchaseOrderRepository.save(purchaseOrder);
     }
 }

@@ -6,5 +6,5 @@ import lombok.Data;
 public class PurchasedProductRequest {
     private Long productId;
     private Double price;
-    private int unit;
+    private int units;
 }
