@@ -46,6 +46,8 @@ public class PurchaseOrdersController {
         if (discountCode != null && !discountCode.isEmpty()) {
             ResponseEntity<List<DiscountCoupon>> discountCoupons = discountCouponsController.getDiscountCouponByDiscountCode(discountCode);
 
+            //TODO Al usar el cupon debo descontar ese uso
+
             //TODO select some discount coupon
             DiscountCoupon discountCoupon = discountCoupons.getBody().getFirst();
             createdPurchaseOrder = purchaseOrderService.createPurchaseOrderwithDiscountCode(discountCoupon, purchaseOrderRequest);

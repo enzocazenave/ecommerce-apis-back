@@ -20,6 +20,9 @@ public class DiscountCoupon {
         this.count = discountCouponRequest.getCount();
         this.code = discountCouponRequest.getCode();
         this.status = discountCouponRequest.getStatus();
+        this.percentage = discountCouponRequest.getPercentage();
+        this.dateCreated = new Date();
+        this.lastUpdated = new Date();
     }
 
     @Id
@@ -41,6 +44,6 @@ public class DiscountCoupon {
     @Column
     private Date dateCreated;
 
-    @OneToMany(mappedBy = "discountCoupon")
-    private List<PurchaseOrder> purchaseOrders;
+    @Column
+    private Date lastUpdated;
 }

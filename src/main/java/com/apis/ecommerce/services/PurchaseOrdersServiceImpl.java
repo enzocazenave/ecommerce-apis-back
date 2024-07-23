@@ -48,13 +48,9 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
 
     public PurchaseOrder createPurchaseOrderwithDiscountCode(DiscountCoupon discountCoupon, PurchaseOrderRequest purchaseOrderRequest) {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
-        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
-        purchaseOrder.setDateCreated(new Date());
-        purchaseOrder.setUser(purchaseOrderRequest.getUser());
-        purchaseOrder.setDiscountCoupon(discountCoupon);
-
         Double totalPrice = 0.0;
         List<PurchasedProduct> purchasedProducts = new ArrayList<>();
+
         for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
             Optional<Product> productOptional = productRepository.findById(purchasedProductRequest.getProductId());
             if (!productOptional.isPresent()) {
@@ -74,11 +70,20 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             totalPrice = totalPrice + (purchasedProduct.getPrice() * purchasedProduct.getUnit());
 
             purchasedProducts.add(purchasedProduct);
+
+            productOptional.get().setStock(productOptional.get().getStock() - purchasedProductRequest.getUnit());
+            productRepository.save(productOptional.get());
         }
+
+        purchaseOrder.setUser(purchaseOrderRequest.getUser());
+        purchaseOrder.setDateCreated(new Date());
+        purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
+        purchaseOrder.setDiscountCoupon(discountCoupon);
         purchaseOrder.setTotalPrice(totalPrice - totalPrice * discountCoupon.getPercentage());
         purchaseOrder.setPurchasedProducts(purchasedProducts);
 
-        return purchaseOrder;
+
+        return purchaseOrderRepository.save(purchaseOrder);
     }
 
     public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) {

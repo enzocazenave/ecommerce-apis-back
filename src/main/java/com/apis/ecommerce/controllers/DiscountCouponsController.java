@@ -30,7 +30,7 @@ public class DiscountCouponsController {
         if (discountCoupon.isPresent()) {
             return ResponseEntity.ok(discountCoupon.get());
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -41,7 +41,7 @@ public class DiscountCouponsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DiscountCoupon> deleteDiscountCouponById(@RequestParam Long id) {
+    public ResponseEntity<DiscountCoupon> deleteDiscountCouponById(@PathVariable Long id) {
         Optional<DiscountCoupon> deletedDiscountCoupon = discountCouponService.deleteDiscountCouponById(id);
         if (!deletedDiscountCoupon.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -50,7 +50,7 @@ public class DiscountCouponsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DiscountCoupon> updateDiscountCoupon(@RequestParam Long id, @RequestBody DiscountCouponRequest discountCouponRequest) throws URISyntaxException {
+    public ResponseEntity<DiscountCoupon> updateDiscountCoupon(@PathVariable Long id, @RequestBody DiscountCouponRequest discountCouponRequest) throws URISyntaxException {
 
         Optional<DiscountCoupon> updatedDiscountCoupon = discountCouponService.updateDiscountCoupon(id, discountCouponRequest);
 
