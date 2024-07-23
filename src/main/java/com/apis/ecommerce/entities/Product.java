@@ -1,6 +1,5 @@
 package com.apis.ecommerce.entities;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +20,14 @@ public class Product {
         this.price = price;
         this.description = description;
         this.size = size;
+    }
+
+    public Product(Product p) {
+        this.name = p.name;
+        this.stock = p.stock;
+        this.price = p.price;
+        this.description = p.description;
+        this.size = p.size;
     }
 
     @Id
