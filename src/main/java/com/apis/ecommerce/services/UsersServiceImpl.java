@@ -1,5 +1,8 @@
 package com.apis.ecommerce.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,17 @@ public class UsersServiceImpl implements UsersService {
         return usersRepository.save(user);
     }
 
-    public User loginUser(String email, String password) {
-        return null;
+    public Optional<User> loginUser(String email, String password) {
+        List<User> user = usersRepository.findByEmail(email);
+
+        if (user.isEmpty()) {
+            return Optional.empty();
+        }
+
+        if (user.get(0).getPassword().equals(password)) {
+            return Optional.of(user.get(0));
+        }
+
+        return Optional.empty();
     }
 }

@@ -42,5 +42,5 @@ public class User {
     private String password;
     
     @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    private List<PurchaseOrder> orders;
 }
