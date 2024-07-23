@@ -11,6 +11,8 @@ import com.apis.ecommerce.exceptions.CategoryDuplicateException;
 @Service
 public interface CategoriesService {
     public List<Category> getCategories();
+
     public Optional<Category> getCategoryById(Long id);
+
     public Category createCategory(String name) throws CategoryDuplicateException;
 }
