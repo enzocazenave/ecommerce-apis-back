@@ -40,6 +40,9 @@ public class User {
 
     @Column
     private String password;
+
+    @Column
+    private boolean status = true;
     
     @OneToMany(mappedBy = "user")
     private List<PurchaseOrder> orders;

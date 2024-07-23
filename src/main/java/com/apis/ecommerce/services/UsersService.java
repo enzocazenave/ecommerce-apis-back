@@ -11,4 +11,5 @@ import com.apis.ecommerce.exceptions.UserDuplicateException;
 public interface UsersService {
     public User registerUser(String name, String surname, String email, String password) throws UserDuplicateException;
     public Optional<User> loginUser(String email, String password);
+    public Optional<User> deleteUser(Long id);
 }

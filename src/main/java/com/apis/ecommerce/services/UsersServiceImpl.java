@@ -37,4 +37,17 @@ public class UsersServiceImpl implements UsersService {
 
         return Optional.empty();
     }
+
+    public Optional<User> deleteUser(Long id) {
+        Optional<User> user = usersRepository.findById(id);
+        
+        if (!user.isPresent()) {
+            return Optional.empty();
+        }
+
+        user.get().setStatus(false);
+        usersRepository.save(user.get());
+
+        return user;
+    }
 }

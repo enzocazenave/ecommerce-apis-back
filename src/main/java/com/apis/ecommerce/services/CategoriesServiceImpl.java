@@ -21,7 +21,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     }
 
     public Optional<Category> getCategoryById(Long id) {
-        return categoriesRepository.findActiveById(id);
+        return categoriesRepository.findById(id);
     }
 
     public Category createCategory(String name) throws CategoryDuplicateException {
@@ -42,10 +42,6 @@ public class CategoriesServiceImpl implements CategoriesService {
 
         if (category.get().getProducts().size() > 0) {
             throw new CategoryHasProductsException();
-        }
-
-        if (!category.get().isStatus()) {
-            return Optional.empty();
         }
 
         category.get().setStatus(false);
