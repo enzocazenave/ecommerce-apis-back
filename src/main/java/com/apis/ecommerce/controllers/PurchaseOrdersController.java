@@ -1,14 +1,14 @@
 package com.apis.ecommerce.controllers;
 
+import com.apis.ecommerce.entities.DiscountCoupon;
 import com.apis.ecommerce.entities.PurchaseOrder;
+import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.services.PurchaseOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +17,10 @@ import java.util.Optional;
 public class PurchaseOrdersController {
     @Autowired
     private PurchaseOrdersService purchaseOrderService;
+
+    @Autowired
+    private DiscountCouponsController discountCouponsController;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseOrder> getPurchaseOrderById(Long id) {
@@ -35,8 +39,19 @@ public class PurchaseOrdersController {
     }
 
     @PostMapping
-    public PurchaseOrder createPurchaseOrder(PurchaseOrder purchaseOrder) {
-        return purchaseOrderService.createPurchaseOrder(purchaseOrder);
+    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest purchaseOrderRequest, @RequestParam(value = "discountCode", required = false) String discountCode) {
+
+        PurchaseOrder createdPurchaseOrder;
+
+        if (discountCode != null && !discountCode.isEmpty()) {
+            ResponseEntity<List<DiscountCoupon>> discountCoupons = discountCouponsController.getDiscountCouponByDiscountCode(discountCode);
+
+            //TODO select some discount coupon
+            DiscountCoupon discountCoupon = discountCoupons.getBody().getFirst();
+            createdPurchaseOrder = purchaseOrderService.createPurchaseOrderwithDiscountCode(discountCoupon, purchaseOrderRequest);
+        }
+        createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderRequest);
+        return ResponseEntity.ok(createdPurchaseOrder);
     }
 
 }

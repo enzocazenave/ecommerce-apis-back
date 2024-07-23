@@ -29,7 +29,7 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
         return discountCouponRepository.findById(id);
     }
 
-    public DiscountCoupon updateDiscountCoupon(Long id, DiscountCouponRequest discountCouponRequest) {
+    public Optional<DiscountCoupon> updateDiscountCoupon(Long id, DiscountCouponRequest discountCouponRequest) {
 
         Optional<DiscountCoupon> discountCouponOptional = discountCouponRepository.findById(id);
         if (!discountCouponOptional.isPresent()) {
@@ -51,17 +51,21 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
             discountCoupon.setPercentage(discountCouponRequest.getPercentage());
         }
 
-        return discountCouponRepository.save(discountCoupon);
+        DiscountCoupon updatedDiscountCoupon = discountCouponRepository.save(discountCoupon);
+        return Optional.of(updatedDiscountCoupon);
     }
 
 
-    public DiscountCoupon deleteDiscountCouponById(Long id) {
+    public Optional<DiscountCoupon> deleteDiscountCouponById(Long id) {
         Optional<DiscountCoupon> discountCoupon = discountCouponRepository.findById(id);
         if (!discountCoupon.isPresent()) {
             return null;
         }
         discountCoupon.get().setStatus(DiscountStatus.EXPIRED);
-        return discountCouponRepository.save(discountCoupon.get());
+        DiscountCoupon updatedDiscountCoupon = discountCouponRepository.save(discountCoupon.get());
+
+        return Optional.of(updatedDiscountCoupon);
+
     }
 
     public boolean isCouponEligible(Long id) {
@@ -72,9 +76,14 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
 
         DiscountCoupon discountCoupon = discountCouponOptional.get();
 
-        if (!discountCoupon.getStatus().equals(DiscountStatus.ACTIVE)){
+        if (!discountCoupon.getStatus().equals(DiscountStatus.ACTIVE)) {
             return false;
         }
         return true;
+    }
+
+    public List<DiscountCoupon> getDiscountCouponByCode(String code) {
+        List<DiscountCoupon> discountCouponList = discountCouponRepository.findByCode(code);
+        return discountCouponList;
     }
 }

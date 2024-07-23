@@ -1,6 +1,5 @@
 package com.apis.ecommerce.services;
 
-import com.apis.ecommerce.entities.DiscountCoupon;
 import com.apis.ecommerce.entities.PurchasedProduct;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +13,4 @@ public interface PurchasedProductsService {
     public Optional<PurchasedProduct> getPurchasedProductById(Long id);
 
     public List<PurchasedProduct> getAllPurchasedProducts();
-
-    public PurchasedProduct saveProductWithDiscountCoupon(PurchasedProduct purchasedProduct, DiscountCoupon discountCoupon);
 }

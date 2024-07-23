@@ -15,9 +15,12 @@ public interface DiscountCouponsService {
 
     public Optional<DiscountCoupon> getDiscountCouponById(Long id);
 
-    public DiscountCoupon updateDiscountCoupon(Long id, DiscountCouponRequest discountCouponRequest);
+    public Optional<DiscountCoupon> updateDiscountCoupon(Long id, DiscountCouponRequest discountCouponRequest);
 
-    public DiscountCoupon deleteDiscountCouponById(Long id);
+    public Optional<DiscountCoupon> deleteDiscountCouponById(Long id);
 
     public boolean isCouponEligible(Long id);
+
+    public List<DiscountCoupon> getDiscountCouponByCode(String code);
+
 }

@@ -1,6 +1,7 @@
 package com.apis.ecommerce.entities;
 
 import jakarta.persistence.*;
+import lombok.Cleanup;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,19 +11,16 @@ import java.util.Date;
 public class PurchasedProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column
-    private Double priceGross;
-
-    @Column
-    private Double priceNet;
-
-    @Column
-    private Double discountAmount;
+    private Long productId;
 
     @Column
     private int unit;
+
+    @Column
+    private Double price;
 
     @Column
     private Date DateCreated;
@@ -30,8 +28,4 @@ public class PurchasedProduct {
     @ManyToOne
     @JoinColumn(name = "purchaseorder_id", nullable = false)
     private PurchaseOrder purchaseOrder;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
 }

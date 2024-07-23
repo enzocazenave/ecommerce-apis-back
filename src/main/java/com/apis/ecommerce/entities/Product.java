@@ -44,7 +44,4 @@ public class Product {
 
     @Column
     private String size;
-
-    @OneToMany(mappedBy = "product")
-    private List<PurchasedProduct> purchasedProducts;
 }
