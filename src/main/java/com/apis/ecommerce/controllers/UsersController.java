@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.User;
 import com.apis.ecommerce.entities.dto.UserLoginRequest;
 import com.apis.ecommerce.entities.dto.UserRequest;
@@ -47,9 +46,9 @@ public class UsersController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        Optional<User> category = usersService.deleteUser(id);
+        Optional<User> user = usersService.deleteUser(id);
         
-        if (category.isPresent()) {
+        if (user.isPresent()) {
             return ResponseEntity.ok("Usuario eliminado con exito");
         }
 
