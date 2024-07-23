@@ -17,6 +17,7 @@ public interface CategoriesRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c WHERE c.name = ?1 AND c.status = true")
     List<Category> findByName(String name);
 
+    @SuppressWarnings("null")
     @Query("SELECT c FROM Category c WHERE c.id = ?1 AND c.status = true")
     Optional<Category> findById(Long id);
 }

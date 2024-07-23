@@ -30,4 +30,4 @@ replay_pid*
 .idea
 
 #Configuraciones de db
-.src/resources
+src/main/resources/application.properties

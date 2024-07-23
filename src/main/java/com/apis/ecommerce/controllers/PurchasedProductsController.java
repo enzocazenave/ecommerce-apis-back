@@ -1,6 +1,5 @@
 package com.apis.ecommerce.controllers;
 
-import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.PurchasedProduct;
 import com.apis.ecommerce.services.PurchasedProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
