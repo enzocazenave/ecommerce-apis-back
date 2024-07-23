@@ -6,7 +6,6 @@ import com.apis.ecommerce.entities.PurchaseOrder;
 import com.apis.ecommerce.entities.PurchasedProduct;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
-import com.apis.ecommerce.enums.DiscountStatus;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
 import com.apis.ecommerce.repositories.ProductRepository;
 import com.apis.ecommerce.repositories.PurchaseOrdersRepository;
