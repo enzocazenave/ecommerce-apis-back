@@ -1,6 +1,7 @@
 package com.apis.ecommerce.controllers;
 
 import com.apis.ecommerce.entities.DiscountCoupon;
+import com.apis.ecommerce.entities.dto.DiscountCouponRequest;
 import com.apis.ecommerce.services.DiscountCouponsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,12 @@ public class DiscountCouponsController {
         if (discountCoupon.isPresent()) {
             return ResponseEntity.ok(discountCoupon.get());
         }
-
         return ResponseEntity.noContent().build();
-
     }
 
     @PostMapping
-    public ResponseEntity<Object> createDiscountCoupon(@RequestBody DiscountCoupon discountCoupon) throws URISyntaxException {
-        DiscountCoupon createdDiscountCoupon = discountCouponService.createDiscountCoupon(discountCoupon);
+    public ResponseEntity<Object> createDiscountCoupon(@RequestBody DiscountCouponRequest discountCouponRequest) throws URISyntaxException {
+        DiscountCoupon createdDiscountCoupon = discountCouponService.createDiscountCoupon(discountCouponRequest);
         URI location = new URI("/discount_coupons/" + createdDiscountCoupon.getId());
         return ResponseEntity.created(location).body(createdDiscountCoupon);
     }

@@ -1,6 +1,7 @@
 package com.apis.ecommerce.services;
 
 import com.apis.ecommerce.entities.DiscountCoupon;
+import com.apis.ecommerce.entities.dto.DiscountCouponRequest;
 import com.apis.ecommerce.repositories.DiscountCouponsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,8 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
     @Autowired
     private DiscountCouponsRepository discountCouponRepository;
 
-    public DiscountCoupon createDiscountCoupon(DiscountCoupon discountCoupon) {
+    public DiscountCoupon createDiscountCoupon(DiscountCouponRequest discountCouponRequest) {
+        DiscountCoupon discountCoupon = new DiscountCoupon(discountCouponRequest);
         return discountCouponRepository.save(discountCoupon);
     }
 
@@ -24,5 +26,14 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
 
     public List<DiscountCoupon> getDiscountCoupons() {
         return discountCouponRepository.findAll();
+    }
+
+    public DiscountCoupon addProductToDiscountCoupon(Long productId, Long discountCouponId) {
+        Optional<DiscountCoupon> discountCoupon = discountCouponRepository.findById(discountCouponId);
+        if (!discountCoupon.isPresent()) {
+            return null;
+        }
+
+        return null;
     }
 }
