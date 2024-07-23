@@ -9,5 +9,5 @@ public class ProductRequest {
     private double price;
     private String description;
     private String size;
-
+    private Long idCategory;
 }

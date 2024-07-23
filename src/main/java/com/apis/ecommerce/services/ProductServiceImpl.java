@@ -6,11 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.Product;
 import com.apis.ecommerce.entities.dto.ProductRequest;
 import com.apis.ecommerce.entities.dto.ProductUpdateRequest;
 import com.apis.ecommerce.exceptions.ProductDuplicateException;
 import com.apis.ecommerce.exceptions.ProductNonexistentException;
+import com.apis.ecommerce.repositories.CategoriesRepository;
 import com.apis.ecommerce.repositories.ProductRepository;
 
 @Service
@@ -18,6 +20,8 @@ public class ProductServiceImpl implements  ProductService{
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CategoriesRepository categoriesRepository;
     
     public List<Product> getProduct() {
         return productRepository.findAll(); 
@@ -32,12 +36,16 @@ public class ProductServiceImpl implements  ProductService{
         if (!productRepository.findByName(p.getName()).isEmpty()) {
             throw new ProductDuplicateException();
         }
+        Optional<Category> category = categoriesRepository.findById(p.getIdCategory());
+
         Product product = new Product(p.getName(),p.getStock(),p.getPrice(),p.getDescription(),p.getSize());
+        product.setCategory(category.get());
+
         return productRepository.save(product);
     }
 
     public List<Product> getProductByCategory(Long idCategory) {
-        return productRepository.findByCategory(idCategory); 
+        return productRepository.findByCategory(idCategory);
     }
 
     public void deleteProduct(Long id) throws ProductNonexistentException {
