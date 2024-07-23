@@ -27,7 +27,7 @@ public class Product {
     private Long id;
  
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @Column 

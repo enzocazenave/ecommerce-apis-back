@@ -13,9 +13,6 @@ public interface ProductRepository extends JpaRepository <Product, Long> {
     @Query("SELECT c FROM Product c WHERE c.name = ?1")
     List<Product> findByName(String name);
 
-    @Query("SELECT c FROM Product c WHERE c.category_id = ?1")
-    List<Product> findByCategory(Long id);
-
     @Query("SELECT c FROM Product c WHERE c.stock >= 0")
     List<Product> findAllAvailable();
 

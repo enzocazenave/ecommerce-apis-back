@@ -43,13 +43,6 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<Product>> getProductByCategory(@PathVariable Long id) {
-        List<Product> products = productsService.getProductByCategory(id);
-        return ResponseEntity.ok(products);
-
-    }
-
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody ProductRequest productRequest) throws ProductDuplicateException {
         Product result = productsService.createProduct(productRequest);
@@ -62,12 +55,10 @@ public class ProductController {
         return ResponseEntity.ok("Producto eliminado con exito");
     }
     
-    @PostMapping
+    @PostMapping("/update")
     public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException {
         productsService.updateProduct(productUpdateRequest);
-        return ResponseEntity.ok("Producto eliminado con exito");
+        return ResponseEntity.ok("Producto editado con exito");
     }
-
-    
 }
 

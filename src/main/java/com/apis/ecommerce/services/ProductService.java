@@ -16,7 +16,6 @@ public interface ProductService {
     public List<Product> getProduct();
     public Optional<Product> getProductById(Long id);
     public Product createProduct(ProductRequest p) throws ProductDuplicateException;
-    public List<Product> getProductByCategory(Long idCategory);
     public void deleteProduct(Long id) throws ProductNonexistentException;
     public void updateProduct(ProductUpdateRequest productRequest) throws ProductNonexistentException;
 } 

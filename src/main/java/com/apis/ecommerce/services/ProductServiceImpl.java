@@ -44,10 +44,6 @@ public class ProductServiceImpl implements  ProductService{
         return productRepository.save(product);
     }
 
-    public List<Product> getProductByCategory(Long idCategory) {
-        return productRepository.findByCategory(idCategory);
-    }
-
     public void deleteProduct(Long id) throws ProductNonexistentException {
         Optional<Product> p = productRepository.findById(id);
         if(p.isEmpty()) {
