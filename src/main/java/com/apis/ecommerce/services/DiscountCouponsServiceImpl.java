@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiscountCouponsServiceImpl implements DiscountCouponsService {
@@ -17,8 +18,8 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
         return discountCouponRepository.save(discountCoupon);
     }
 
-    public DiscountCoupon getDiscountCouponById(Long id) {
-        return discountCouponRepository.findById(id).get();
+    public Optional<DiscountCoupon> getDiscountCouponById(Long id) {
+        return discountCouponRepository.findById(id);
     }
 
     public List<DiscountCoupon> getDiscountCoupons() {

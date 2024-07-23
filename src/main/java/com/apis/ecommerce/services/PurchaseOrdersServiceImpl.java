@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
@@ -13,8 +14,8 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
     @Autowired
     private PurchaseOrdersRepository purchaseOrderRepository;
 
-    public PurchaseOrder getPurchaseOrder(Long id) {
-        return purchaseOrderRepository.findById(id).get();
+    public Optional<PurchaseOrder> getPurchaseOrderById(Long id) {
+        return purchaseOrderRepository.findById(id);
     }
 
     public List<PurchaseOrder> getAllPurchaseOrders() {

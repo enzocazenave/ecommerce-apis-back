@@ -20,7 +20,6 @@ public class CategoriesServiceImpl implements CategoriesService {
     }
 
     public Optional<Category> getCategoryById(Long id) {
-        System.out.println(id);
         return categoriesRepository.findById(id);
     }
 
