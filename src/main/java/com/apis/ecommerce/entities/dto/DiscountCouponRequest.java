@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 public class DiscountCouponRequest {
-    private int count;
+    private Integer count;
     private String code;
     private DiscountStatus status;
+    private Double percentage;
 }

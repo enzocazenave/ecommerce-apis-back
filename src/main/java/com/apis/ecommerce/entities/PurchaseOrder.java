@@ -29,4 +29,8 @@ public class PurchaseOrder {
 
     @OneToMany(mappedBy = "purchaseOrder")
     private List<PurchasedProduct> purchasedProducts;
+    
+    @ManyToOne
+    @JoinColumn(name = "discountCoupon_id", nullable = false)
+    private DiscountCoupon discountCoupon;
 }

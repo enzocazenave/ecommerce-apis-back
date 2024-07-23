@@ -47,7 +47,4 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<PurchasedProduct> purchasedProducts;
-
-    @OneToOne(mappedBy = "product")
-    private DiscountCoupon coupon;
 }

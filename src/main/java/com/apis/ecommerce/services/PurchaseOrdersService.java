@@ -8,9 +8,11 @@ import java.util.Optional;
 
 @Service
 public interface PurchaseOrdersService {
+    public PurchaseOrder createPurchaseOrder(PurchaseOrder purchaseOrder);
+
     public Optional<PurchaseOrder> getPurchaseOrderById(Long id);
 
     public List<PurchaseOrder> getAllPurchaseOrders();
 
-    public PurchaseOrder createPurchaseOrder(PurchaseOrder purchaseOrder);
+    public PurchaseOrder deletePurchaseOrderById(Long id);
 }

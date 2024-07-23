@@ -11,9 +11,13 @@ import java.util.Optional;
 public interface DiscountCouponsService {
     public DiscountCoupon createDiscountCoupon(DiscountCouponRequest discountCouponRequest);
 
-    public Optional<DiscountCoupon> getDiscountCouponById(Long id);
-
     public List<DiscountCoupon> getDiscountCoupons();
 
-    public DiscountCoupon addProductToDiscountCoupon(Long productId, Long discountCouponId);
+    public Optional<DiscountCoupon> getDiscountCouponById(Long id);
+
+    public DiscountCoupon updateDiscountCoupon(Long id, DiscountCouponRequest discountCouponRequest);
+
+    public DiscountCoupon deleteDiscountCouponById(Long id);
+
+    public boolean isCouponEligible(Long id);
 }

@@ -34,8 +34,4 @@ public class PurchasedProduct {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "discountCoupon_id", nullable = false)
-    private DiscountCoupon discountCoupon;
 }

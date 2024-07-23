@@ -26,10 +26,6 @@ public class DiscountCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne()
-    @JoinColumn(name = "product_id")
-    private Product product;
-
     @Column
     private int count;
 
@@ -46,5 +42,5 @@ public class DiscountCoupon {
     private Date dateCreated;
 
     @OneToMany(mappedBy = "discountCoupon")
-    private List<PurchasedProduct> purchasedProduct;
+    private List<PurchaseOrder> purchaseOrders;
 }
