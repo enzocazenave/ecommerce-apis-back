@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.apis.ecommerce.entities.Category;
@@ -24,8 +26,8 @@ public class ProductServiceImpl implements  ProductService{
     @Autowired
     private CategoriesRepository categoriesRepository;
     
-    public List<Product> getProduct() {
-        return productRepository.findAll(); 
+    public Page<Product> getProduct(PageRequest pageable) {
+        return productRepository.findAll(pageable); 
         //return productRepository.findAllAvailable(); //si hacemos un borrado logico
     }
 
