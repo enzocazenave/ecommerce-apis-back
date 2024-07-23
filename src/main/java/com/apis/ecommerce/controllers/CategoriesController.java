@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.dto.CategoryRequest;
 import com.apis.ecommerce.exceptions.CategoryDuplicateException;
+import com.apis.ecommerce.exceptions.CategoryHasProductsException;
 import com.apis.ecommerce.services.CategoriesService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,4 +48,14 @@ public class CategoriesController {
         return ResponseEntity.ok(result);
     }
     
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) throws CategoryHasProductsException {
+        Optional<Category> category = categoriesService.deleteCategory(id);
+        
+        if (category.isPresent()) {
+            return ResponseEntity.ok("Categoria eliminada con exito");
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 }
