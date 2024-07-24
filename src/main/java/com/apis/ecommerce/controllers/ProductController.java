@@ -3,6 +3,7 @@ package com.apis.ecommerce.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.apis.ecommerce.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apis.ecommerce.entities.Product;
 import com.apis.ecommerce.entities.dto.ProductRequest;
 import com.apis.ecommerce.entities.dto.ProductUpdateRequest;
-import com.apis.ecommerce.exceptions.CategoryNonexistentException;
-import com.apis.ecommerce.exceptions.ProductDuplicateException;
-import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import com.apis.ecommerce.services.ProductService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,10 +31,7 @@ public class ProductController {
     private ProductService productsService;
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getProducts(
-        @RequestParam(required = false) Integer page,
-        @RequestParam(required = false) Integer size
-    ) {
+    public ResponseEntity<Page<Product>> getProducts(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
             return ResponseEntity.ok(productsService.getProduct(PageRequest.of(0, Integer.MAX_VALUE)));
         return ResponseEntity.ok(productsService.getProduct(PageRequest.of(page, size)));
@@ -50,7 +45,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Optional<Product> product = productsService.getProductById(id);
-        
+
         if (product.isPresent()) {
             return ResponseEntity.ok(product.get());
         }
@@ -60,16 +55,24 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody ProductRequest productRequest) throws ProductDuplicateException {
+        if (productRequest.getPrice() <= 0) {
+            throw new InvalidPriceException();
+        }
+
+        if (productRequest.getStock() <= 0) {
+            throw new InvalidStockException();
+        }
+
         Product result = productsService.createProduct(productRequest);
         return ResponseEntity.ok(result);
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) throws ProductNonexistentException {
         productsService.deleteProduct(id);
         return ResponseEntity.ok("Producto eliminado con exito");
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException, CategoryNonexistentException {
         productsService.updateProduct(id, productUpdateRequest);
