@@ -6,8 +6,8 @@ import lombok.Data;
 public class ProductUpdateRequest {
     private Long id;
     private String name;
-    private int stock;
-    private double price;
+    private Integer stock;
+    private Double price;
     private String description;
     private String size;
     private Long idCategory;
