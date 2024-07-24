@@ -36,13 +36,10 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
     private PurchasedProductsService purchasedProductsService;
 
     public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) throws InsufficientStockException, ProductNonexistentException, UserNotFoundException {
-        System.out.println("im here!");
-        //TotalPrice
         double totalPrice = 0.0;
         List<PurchasedProduct> purchasedProducts = new ArrayList<>();
 
         for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
-            Double price = purchasedProductRequest.getPrice();
             Integer units = purchasedProductRequest.getUnits();
             Long productId = purchasedProductRequest.getProductId();
 
@@ -54,9 +51,10 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             Product product = productOptional.get();
 
             if (product.getStock() < units) {
-                System.out.println("No hay stock");
                 throw new InsufficientStockException();
             }
+
+            Double price = product.getPrice();
 
             PurchasedProduct purchasedProduct = new PurchasedProduct();
             purchasedProduct.setPrice(price);
@@ -70,7 +68,6 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
 
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setTotalPrice(totalPrice);
-        System.out.println("im here! - purchaseOrder without discount:" + purchaseOrder);
 
         //DiscountCoupon logic
         Optional<DiscountCoupon> discountCouponOptional = discountCouponsService.getDiscountCouponByCode(purchaseOrderRequest.getDiscountCode());
@@ -80,7 +77,6 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             purchaseOrder.setTotalPrice(totalPrice - totalPrice * discountCoupon.getPercentage() / 100);
             purchaseOrder.setDiscountCoupon(discountCoupon);
             discountCouponsService.reduceStockByOne(discountCoupon.getId());
-            System.out.println("im here! - purchaseOrder with discount:" + purchaseOrder);
         }
 
         purchaseOrder.setDateCreated(new Date());
@@ -92,7 +88,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             throw new UserNotFoundException();
         }
         purchaseOrder.setUser(user.get());
-        System.out.println("im here! - purchaseOrder with more data:" + purchaseOrder);
+
         PurchaseOrder  persitedPurchaseOrder =  purchaseOrderRepository.save(purchaseOrder);
         for (PurchasedProduct purchasedProduct : purchasedProducts) {
             purchasedProduct.setPurchaseOrder(persitedPurchaseOrder);
