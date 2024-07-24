@@ -39,6 +39,6 @@ public class PurchaseOrder {
     private List<PurchasedProduct> purchasedProducts;
 
     @ManyToOne
-    @JoinColumn(name = "discountCoupon_id", nullable = false)
+    @JoinColumn(name = "discountCoupon_id", nullable = true)
     private DiscountCoupon discountCoupon;
 }
