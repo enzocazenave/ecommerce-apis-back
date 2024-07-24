@@ -6,6 +6,7 @@ import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
 import com.apis.ecommerce.exceptions.InsufficientStockException;
 import com.apis.ecommerce.exceptions.ProductNonexistentException;
+import com.apis.ecommerce.exceptions.UserNotFoundException;
 import com.apis.ecommerce.repositories.PurchaseOrdersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
     @Autowired
     private PurchasedProductsService purchasedProductsService;
 
-    public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) throws InsufficientStockException, ProductNonexistentException {
+    public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) throws InsufficientStockException, ProductNonexistentException, UserNotFoundException {
         System.out.println("im here!");
         //TotalPrice
         double totalPrice = 0.0;
@@ -88,7 +89,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
         //User Logic
         Optional<User> user = usersService.getUserById(purchaseOrderRequest.getUserId());
         if (user.isEmpty()) {
-            return null;
+            throw new UserNotFoundException();
         }
         purchaseOrder.setUser(user.get());
         System.out.println("im here! - purchaseOrder with more data:" + purchaseOrder);
