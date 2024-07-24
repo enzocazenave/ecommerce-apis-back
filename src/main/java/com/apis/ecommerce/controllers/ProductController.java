@@ -75,6 +75,14 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException, CategoryNonexistentException {
+        if (productUpdateRequest.getPrice() != null && productUpdateRequest.getPrice() <= 0) {
+            throw new InvalidPriceException();
+        }
+
+        if (productUpdateRequest.getStock() != null && productUpdateRequest.getStock() <= 0) {
+            throw new InvalidStockException();
+        }
+
         productsService.updateProduct(id, productUpdateRequest);
         return ResponseEntity.ok("Producto editado con exito");
     }

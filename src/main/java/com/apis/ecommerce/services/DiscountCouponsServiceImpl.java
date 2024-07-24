@@ -3,6 +3,7 @@ package com.apis.ecommerce.services;
 import com.apis.ecommerce.entities.DiscountCoupon;
 import com.apis.ecommerce.entities.dto.DiscountCouponRequest;
 import com.apis.ecommerce.enums.DiscountStatus;
+import com.apis.ecommerce.exceptions.CouponDuplicateException;
 import com.apis.ecommerce.repositories.DiscountCouponsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,19 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
     @Autowired
     private DiscountCouponsRepository discountCouponRepository;
 
-    public DiscountCoupon createDiscountCoupon(DiscountCouponRequest discountCouponRequest) {
-        DiscountCoupon discountCoupon = new DiscountCoupon(discountCouponRequest);
-        return discountCouponRepository.save(discountCoupon);
+    public boolean duplicateCoupon(DiscountCouponRequest discountCouponRequest) {
+        Optional<DiscountCoupon> discountCoupon = getDiscountCouponByCode(discountCouponRequest.getCode());
+        if (discountCoupon.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+    public DiscountCoupon createDiscountCoupon(DiscountCouponRequest discountCouponRequest) throws CouponDuplicateException {
+        if (duplicateCoupon(discountCouponRequest)) {
+            throw new CouponDuplicateException();
+        }
+        DiscountCoupon newDiscountCoupon = new DiscountCoupon(discountCouponRequest);
+        return discountCouponRepository.save(newDiscountCoupon);
     }
 
     public List<DiscountCoupon> getDiscountCoupons() {
@@ -30,7 +41,10 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
         return discountCouponRepository.findById(id);
     }
 
-    public Optional<DiscountCoupon> updateDiscountCoupon(Long id, DiscountCouponRequest discountCouponRequest) {
+    public Optional<DiscountCoupon> updateDiscountCoupon(Long id, DiscountCouponRequest discountCouponRequest) throws CouponDuplicateException {
+        if (duplicateCoupon(discountCouponRequest)) {
+            throw new CouponDuplicateException();
+        }
 
         Optional<DiscountCoupon> discountCouponOptional = discountCouponRepository.findById(id);
         if (!discountCouponOptional.isPresent()) {

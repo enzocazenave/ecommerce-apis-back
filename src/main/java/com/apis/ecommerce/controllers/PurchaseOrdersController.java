@@ -3,10 +3,7 @@ package com.apis.ecommerce.controllers;
 import com.apis.ecommerce.entities.PurchaseOrder;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
-import com.apis.ecommerce.exceptions.InsufficientStockException;
-import com.apis.ecommerce.exceptions.InvalidPriceException;
-import com.apis.ecommerce.exceptions.InvalidUnitsException;
-import com.apis.ecommerce.exceptions.ProductNonexistentException;
+import com.apis.ecommerce.exceptions.*;
 import com.apis.ecommerce.services.PurchaseOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +35,7 @@ public class PurchaseOrdersController {
     }
 
     @PostMapping
-    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest purchaseOrderRequest) throws InvalidUnitsException, InsufficientStockException, ProductNonexistentException {
+    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest purchaseOrderRequest) throws InvalidUnitsException, InsufficientStockException, ProductNonexistentException, UserNotFoundException {
         for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
             if (purchasedProductRequest.getUnits() <= 0) {
                 throw new InvalidUnitsException();

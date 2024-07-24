@@ -2,6 +2,7 @@ package com.apis.ecommerce.controllers;
 
 import com.apis.ecommerce.entities.DiscountCoupon;
 import com.apis.ecommerce.entities.dto.DiscountCouponRequest;
+import com.apis.ecommerce.exceptions.CouponDuplicateException;
 import com.apis.ecommerce.services.DiscountCouponsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class DiscountCouponsController {
     }
 
     @PostMapping
-    public ResponseEntity<DiscountCoupon> createDiscountCoupon(@RequestBody DiscountCouponRequest discountCouponRequest) throws URISyntaxException {
+    public ResponseEntity<DiscountCoupon> createDiscountCoupon(@RequestBody DiscountCouponRequest discountCouponRequest) throws URISyntaxException, CouponDuplicateException {
         DiscountCoupon createdDiscountCoupon = discountCouponService.createDiscountCoupon(discountCouponRequest);
         URI location = new URI("/discount_coupons/" + createdDiscountCoupon.getId());
         return ResponseEntity.created(location).body(createdDiscountCoupon);
@@ -49,7 +50,7 @@ public class DiscountCouponsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DiscountCoupon> updateDiscountCoupon(@PathVariable Long id, @RequestBody DiscountCouponRequest discountCouponRequest) throws URISyntaxException {
+    public ResponseEntity<DiscountCoupon> updateDiscountCoupon(@PathVariable Long id, @RequestBody DiscountCouponRequest discountCouponRequest) throws URISyntaxException, CouponDuplicateException {
 
         Optional<DiscountCoupon> updatedDiscountCoupon = discountCouponService.updateDiscountCoupon(id, discountCouponRequest);
 
