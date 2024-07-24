@@ -125,4 +125,12 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    public List<Product> getProductByName(String nombre) {
+        return productRepository.findByName(nombre);
+    }
+
+    public List<Product> getProductsByPrice(Double priceMin,Double priceMax ) {
+        return productRepository.findByPrice(priceMin,priceMax);
+    }
+
 }
