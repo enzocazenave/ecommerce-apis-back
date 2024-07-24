@@ -3,6 +3,7 @@ package com.apis.ecommerce.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.apis.ecommerce.exceptions.InsufficientStockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,15 +20,15 @@ import com.apis.ecommerce.repositories.CategoriesRepository;
 import com.apis.ecommerce.repositories.ProductRepository;
 
 @Service
-public class ProductServiceImpl implements  ProductService{
+public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private CategoriesRepository categoriesRepository;
-    
+
     public Page<Product> getProduct(PageRequest pageable) {
-        return productRepository.findAll(pageable); 
+        return productRepository.findAll(pageable);
         //return productRepository.findAllAvailable(); //si hacemos un borrado logico
     }
 
@@ -45,7 +46,7 @@ public class ProductServiceImpl implements  ProductService{
         }
         Optional<Category> category = categoriesRepository.findById(p.getIdCategory());
 
-        Product product = new Product(p.getName(),p.getStock(),p.getPrice(),p.getDescription(),p.getSize());
+        Product product = new Product(p.getName(), p.getStock(), p.getPrice(), p.getDescription(), p.getSize());
         product.setCategory(category.get());
 
         return productRepository.save(product);
@@ -53,23 +54,23 @@ public class ProductServiceImpl implements  ProductService{
 
     public void deleteProduct(Long id) throws ProductNonexistentException {
         Optional<Product> p = productRepository.findById(id);
-        if(p.isEmpty()) {
-            throw new ProductNonexistentException();     
-         }
-        productRepository.deleteById(id); 
+        if (p.isEmpty()) {
+            throw new ProductNonexistentException();
+        }
+        productRepository.deleteById(id);
         //productRepository.removedLogical(id); //borrado logico
     }
 
     public void updateProduct(ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException {
         Optional<Product> p = productRepository.findById(productRequest.getId());
 
-        if(p.isEmpty()) {
-           throw new ProductNonexistentException();     
+        if (p.isEmpty()) {
+            throw new ProductNonexistentException();
         }
 
         Product product = p.get();
         product.setName(productRequest.getName());
-        product.setStock(productRequest.getStock()); 
+        product.setStock(productRequest.getStock());
         product.setPrice(productRequest.getPrice());
         product.setDescription(productRequest.getDescription());
         product.setSize(productRequest.getSize());
@@ -81,6 +82,34 @@ public class ProductServiceImpl implements  ProductService{
         }
 
         product.setCategory(category.get());
+        productRepository.save(product);
+    }
+
+    public void deductStock(Long id, int quantity) throws ProductNonexistentException, InsufficientStockException {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new ProductNonexistentException();
+        }
+
+        Product product = optionalProduct.get();
+        int currentStock = product.getStock();
+        int newStock = currentStock - quantity;
+        if (newStock < 0) {
+            throw new InsufficientStockException();
+        }
+        product.setStock(newStock);
+
+        productRepository.save(product);
+    }
+
+    public void reduceStockBy(Long id, int quantity) throws ProductNonexistentException, InsufficientStockException {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new ProductNonexistentException();
+        }
+
+        Product product = optionalProduct.get();
+        product.setStock(product.getStock() - quantity);
         productRepository.save(product);
     }
 

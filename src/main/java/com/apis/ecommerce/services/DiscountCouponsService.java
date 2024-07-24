@@ -21,6 +21,8 @@ public interface DiscountCouponsService {
 
     public boolean isCouponEligible(Long id);
 
-    public List<DiscountCoupon> getDiscountCouponByCode(String code);
+    public Optional<DiscountCoupon>  getDiscountCouponByCode(String code);
 
-}
+    public DiscountCoupon reduceStockByOne(Long couponId);
+
+    }

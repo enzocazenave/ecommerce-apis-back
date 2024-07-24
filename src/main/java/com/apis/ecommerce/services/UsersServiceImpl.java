@@ -3,7 +3,9 @@ package com.apis.ecommerce.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.apis.ecommerce.entities.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.apis.ecommerce.entities.User;
@@ -19,7 +21,7 @@ public class UsersServiceImpl implements UsersService {
         if (!usersRepository.findByEmail(email).isEmpty()) {
             throw new UserDuplicateException();
         }
-        
+
         User user = new User(name, surname, email, password);
         return usersRepository.save(user);
     }
@@ -40,13 +42,23 @@ public class UsersServiceImpl implements UsersService {
 
     public Optional<User> deleteUser(Long id) {
         Optional<User> user = usersRepository.findById(id);
-        
+
         if (!user.isPresent()) {
             return Optional.empty();
         }
 
         user.get().setStatus(false);
         usersRepository.save(user.get());
+
+        return user;
+    }
+
+    public Optional<User> getUserById(Long id) {
+        Optional<User> user = usersRepository.findById(id);
+
+        if (!user.isPresent()) {
+            return Optional.empty();
+        }
 
         return user;
     }

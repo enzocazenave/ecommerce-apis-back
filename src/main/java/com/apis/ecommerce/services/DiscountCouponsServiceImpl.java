@@ -39,8 +39,8 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
 
         DiscountCoupon discountCoupon = discountCouponOptional.get();
 
-        if (discountCouponRequest.getCount() != null) {
-            discountCoupon.setCount(discountCouponRequest.getCount());
+        if (discountCouponRequest.getAvailableQuantity() != null) {
+            discountCoupon.setAvailableQuantity(discountCouponRequest.getAvailableQuantity());
         }
         if (discountCouponRequest.getCode() != null) {
             discountCoupon.setCode(discountCouponRequest.getCode());
@@ -88,8 +88,20 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
         return true;
     }
 
-    public List<DiscountCoupon> getDiscountCouponByCode(String code) {
-        List<DiscountCoupon> discountCouponList = discountCouponRepository.findByCode(code);
+    public Optional<DiscountCoupon> getDiscountCouponByCode(String code) {
+        Optional<DiscountCoupon> discountCouponList = discountCouponRepository.findByCode(code);
         return discountCouponList;
+    }
+
+    public DiscountCoupon reduceStockByOne(Long id) {
+        Optional<DiscountCoupon> discountCouponOptional = discountCouponRepository.findById(id);
+        if (!discountCouponOptional.isPresent()) {
+            return null;
+        }
+
+        DiscountCoupon discountCoupon = discountCouponOptional.get();
+        discountCoupon.setAvailableQuantity(discountCoupon.getAvailableQuantity() - 1);
+
+        return discountCouponRepository.save(discountCoupon);
     }
 }

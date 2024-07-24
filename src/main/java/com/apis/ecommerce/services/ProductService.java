@@ -3,6 +3,8 @@ package com.apis.ecommerce.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.apis.ecommerce.entities.DiscountCoupon;
+import com.apis.ecommerce.exceptions.InsufficientStockException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,4 +24,6 @@ public interface ProductService {
     public Product createProduct(ProductRequest p) throws ProductDuplicateException;
     public void deleteProduct(Long id) throws ProductNonexistentException;
     public void updateProduct(ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException;
-} 
+    public void deductStock(Long productId, int quantity) throws ProductNonexistentException, InsufficientStockException;
+    public void reduceStockBy(Long id, int quantity) throws ProductNonexistentException, InsufficientStockException;
+}
