@@ -53,6 +53,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             Product product = productOptional.get();
 
             if (product.getStock() < units) {
+                System.out.println("No hay stock");
                 throw new InsufficientStockException();
             }
 
