@@ -60,8 +60,8 @@ public class ProductServiceImpl implements ProductService {
         //productRepository.removedLogical(id); //borrado logico
     }
 
-    public void updateProduct(ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException {
-        Optional<Product> p = productRepository.findById(productRequest.getId());
+    public void updateProduct(Long id, ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException {
+        Optional<Product> p = productRepository.findById(id);
 
         if (p.isEmpty()) {
             throw new ProductNonexistentException();
