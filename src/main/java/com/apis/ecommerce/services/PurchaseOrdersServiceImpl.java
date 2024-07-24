@@ -81,7 +81,6 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             System.out.println("im here! - purchaseOrder with discount:" + purchaseOrder);
         }
 
-        purchaseOrder.setPurchasedProducts(purchasedProducts);
         purchaseOrder.setDateCreated(new Date());
         purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
 
@@ -93,12 +92,11 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
         purchaseOrder.setUser(user.get());
         System.out.println("im here! - purchaseOrder with more data:" + purchaseOrder);
         PurchaseOrder  persitedPurchaseOrder =  purchaseOrderRepository.save(purchaseOrder);
-        for (PurchasedProduct purchasedProduct : persitedPurchaseOrder.getPurchasedProducts()) {
+        for (PurchasedProduct purchasedProduct : purchasedProducts) {
             purchasedProduct.setPurchaseOrder(persitedPurchaseOrder);
             purchasedProduct.setDateCreated(new Date());
             purchasedProductsService.createPurchasedProduct(purchasedProduct);
         }
-
 
         return persitedPurchaseOrder;
     }

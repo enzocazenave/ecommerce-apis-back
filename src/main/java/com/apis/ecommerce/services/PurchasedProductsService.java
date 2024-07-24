@@ -13,4 +13,7 @@ public interface PurchasedProductsService {
     public Optional<PurchasedProduct> getPurchasedProductById(Long id);
 
     public List<PurchasedProduct> getAllPurchasedProducts();
+
+    public List<PurchasedProduct> getPurchasedProductByPurchaseOrderId(Long purchaseOrderId);
+
 }
