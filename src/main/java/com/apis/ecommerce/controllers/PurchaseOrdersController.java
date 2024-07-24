@@ -2,8 +2,10 @@ package com.apis.ecommerce.controllers;
 
 import com.apis.ecommerce.entities.PurchaseOrder;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
+import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
 import com.apis.ecommerce.exceptions.InsufficientStockException;
-import com.apis.ecommerce.exceptions.InvalidPriceOrUnitProductException;
+import com.apis.ecommerce.exceptions.InvalidPriceException;
+import com.apis.ecommerce.exceptions.InvalidUnitsException;
 import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import com.apis.ecommerce.services.PurchaseOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,16 @@ public class PurchaseOrdersController {
     }
 
     @PostMapping
-    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest purchaseOrderRequest) throws InvalidPriceOrUnitProductException, InsufficientStockException, ProductNonexistentException {
+    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest purchaseOrderRequest) throws InvalidUnitsException, InsufficientStockException, ProductNonexistentException {
+        for (PurchasedProductRequest purchasedProductRequest : purchaseOrderRequest.getPurchasedProductRequests()) {
+            if (purchasedProductRequest.getUnits() <= 0) {
+                throw new InvalidUnitsException();
+            }
+            if (purchasedProductRequest.getPrice() < 0) {
+                throw new InvalidPriceException();
+            }
+        }
+
         PurchaseOrder createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderRequest);
         return ResponseEntity.ok(createdPurchaseOrder);
     }
