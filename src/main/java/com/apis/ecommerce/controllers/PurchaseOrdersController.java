@@ -20,10 +20,6 @@ public class PurchaseOrdersController {
     @Autowired
     private PurchaseOrdersService purchaseOrderService;
 
-    @Autowired
-    private DiscountCouponsController discountCouponsController;
-
-
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseOrder> getPurchaseOrderById(Long id) {
 

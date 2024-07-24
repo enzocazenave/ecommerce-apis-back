@@ -7,6 +7,7 @@ import com.apis.ecommerce.enums.PurchaseOrderStatus;
 import com.apis.ecommerce.exceptions.InsufficientStockException;
 import com.apis.ecommerce.exceptions.ProductNonexistentException;
 import com.apis.ecommerce.repositories.PurchaseOrdersRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,9 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
 
     @Autowired
     private DiscountCouponsService discountCouponsService;
+
+    @Autowired
+    private PurchasedProductsService purchasedProductsService;
 
     public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) throws InsufficientStockException, ProductNonexistentException {
         System.out.println("im here!");
@@ -77,10 +81,8 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             System.out.println("im here! - purchaseOrder with discount:" + purchaseOrder);
         }
 
-        purchaseOrder.setPurchasedProducts(purchasedProducts);
         purchaseOrder.setDateCreated(new Date());
         purchaseOrder.setStatus(PurchaseOrderStatus.APPROVED);
-        purchaseOrder.setDiscountCoupon(new DiscountCoupon());
 
         //User Logic
         Optional<User> user = usersService.getUserById(purchaseOrderRequest.getUserId());
@@ -89,7 +91,14 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
         }
         purchaseOrder.setUser(user.get());
         System.out.println("im here! - purchaseOrder with more data:" + purchaseOrder);
-        return purchaseOrderRepository.save(purchaseOrder);
+        PurchaseOrder  persitedPurchaseOrder =  purchaseOrderRepository.save(purchaseOrder);
+        for (PurchasedProduct purchasedProduct : purchasedProducts) {
+            purchasedProduct.setPurchaseOrder(persitedPurchaseOrder);
+            purchasedProduct.setDateCreated(new Date());
+            purchasedProductsService.createPurchasedProduct(purchasedProduct);
+        }
+
+        return persitedPurchaseOrder;
     }
 
     public Optional<PurchaseOrder> getPurchaseOrderById(Long id) {

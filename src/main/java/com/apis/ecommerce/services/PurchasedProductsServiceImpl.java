@@ -25,4 +25,8 @@ public class PurchasedProductsServiceImpl implements PurchasedProductsService {
         return purchasedProductRepository.findAll();
     }
 
+    public List<PurchasedProduct> getPurchasedProductByPurchaseOrderId(Long purchaseOrderId) {
+        return purchasedProductRepository.findByPurchaseOrderId(purchaseOrderId).get();
+    }
+
 }

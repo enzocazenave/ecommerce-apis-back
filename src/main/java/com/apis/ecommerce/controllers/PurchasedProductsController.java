@@ -4,10 +4,7 @@ import com.apis.ecommerce.entities.PurchasedProduct;
 import com.apis.ecommerce.services.PurchasedProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +16,7 @@ public class PurchasedProductsController {
     private PurchasedProductsService purchasedProductService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PurchasedProduct> getPurchasedProductById(Long id) {
+    public ResponseEntity<PurchasedProduct> getPurchasedProductById(@PathVariable Long id) {
 
         Optional<PurchasedProduct> purchasedProduct = purchasedProductService.getPurchasedProductById(id);
         if (purchasedProduct.isPresent()) {
@@ -34,8 +31,9 @@ public class PurchasedProductsController {
         return purchasedProductService.getAllPurchasedProducts();
     }
 
-    @PostMapping
-    public PurchasedProduct createPurchasedProduct(PurchasedProduct purchasedProduct) {
-        return purchasedProductService.createPurchasedProduct(purchasedProduct);
+    @GetMapping("/purchases_orders/{id}")
+    public List<PurchasedProduct> getAllPurchasedProductsByPurchaseorderId(@PathVariable Long id) {
+        return purchasedProductService.getPurchasedProductByPurchaseOrderId(id);
     }
+
 }

@@ -35,10 +35,7 @@ public class PurchaseOrder {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "purchaseOrder")
-    private List<PurchasedProduct> purchasedProducts;
-
     @ManyToOne
-    @JoinColumn(name = "discountCoupon_id", nullable = false)
+    @JoinColumn(name = "discountCoupon_id", nullable = true)
     private DiscountCoupon discountCoupon;
 }
