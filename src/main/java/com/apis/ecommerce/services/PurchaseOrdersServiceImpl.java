@@ -31,6 +31,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
     private DiscountCouponsService discountCouponsService;
 
     public PurchaseOrder createPurchaseOrder(PurchaseOrderRequest purchaseOrderRequest) throws InsufficientStockException, ProductNonexistentException {
+        System.out.println("im here!");
         //TotalPrice
         double totalPrice = 0.0;
         List<PurchasedProduct> purchasedProducts = new ArrayList<>();
@@ -63,6 +64,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
 
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setTotalPrice(totalPrice);
+        System.out.println("im here! - purchaseOrder without discount:" + purchaseOrder);
 
         //DiscountCoupon logic
         Optional<DiscountCoupon> discountCouponOptional = discountCouponsService.getDiscountCouponByCode(purchaseOrderRequest.getDiscountCode());
@@ -72,6 +74,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             purchaseOrder.setTotalPrice(totalPrice - totalPrice * discountCoupon.getPercentage() / 100);
             purchaseOrder.setDiscountCoupon(discountCoupon);
             discountCouponsService.reduceStockByOne(discountCoupon.getId());
+            System.out.println("im here! - purchaseOrder with discount:" + purchaseOrder);
         }
 
         purchaseOrder.setPurchasedProducts(purchasedProducts);
@@ -85,7 +88,7 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             return null;
         }
         purchaseOrder.setUser(user.get());
-
+        System.out.println("im here! - purchaseOrder with more data:" + purchaseOrder);
         return purchaseOrderRepository.save(purchaseOrder);
     }
 
