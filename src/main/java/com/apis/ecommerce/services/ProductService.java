@@ -19,7 +19,9 @@ import com.apis.ecommerce.exceptions.ProductNonexistentException;
 public interface ProductService {
     public Page<Product> getProduct(PageRequest pageRequest);
     public Optional<Product> getProductById(Long id);
+    public List<Product> getProductByName(String nombre);
     public List<Product> getProductsByCategoryId(Long id);  
+    public List<Product> getProductsByPrice(Double priceMin,Double priceMax );  
     public Product createProduct(ProductRequest p) throws ProductDuplicateException;
     public void deleteProduct(Long id) throws ProductNonexistentException;
     public void updateProduct(Long id, ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException;
