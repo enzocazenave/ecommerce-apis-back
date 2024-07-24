@@ -1,15 +1,10 @@
 package com.apis.ecommerce.entities;
 
-import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
-import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
-import com.apis.ecommerce.entities.dto.UserRequest;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data

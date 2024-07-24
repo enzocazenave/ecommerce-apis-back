@@ -3,7 +3,6 @@ package com.apis.ecommerce.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.apis.ecommerce.entities.DiscountCoupon;
 import com.apis.ecommerce.exceptions.InsufficientStockException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
