@@ -29,7 +29,6 @@ public class ProductServiceImpl implements ProductService {
 
     public Page<Product> getProduct(PageRequest pageable) {
         return productRepository.findAll(pageable);
-        //return productRepository.findAllAvailable(); //si hacemos un borrado logico
     }
 
     public Optional<Product> getProductById(Long id) {
@@ -69,19 +68,32 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product product = p.get();
-        product.setName(productRequest.getName());
-        product.setStock(productRequest.getStock());
-        product.setPrice(productRequest.getPrice());
-        product.setDescription(productRequest.getDescription());
-        product.setSize(productRequest.getSize());
 
-        Optional<Category> category = categoriesRepository.findById(productRequest.getIdCategory());
-
-        if (category.isEmpty()) {
-            throw new CategoryNonexistentException();
+        if (productRequest.getName() != null) {
+            product.setName(productRequest.getName());
+        }
+        if (productRequest.getStock() != null) {
+            product.setStock(productRequest.getStock());
+        }
+        if (productRequest.getPrice() != null) {
+            product.setPrice(productRequest.getPrice());
+        }
+        if (productRequest.getDescription() != null) {
+            product.setDescription(productRequest.getDescription());
+        }
+        if (productRequest.getSize() != null) {
+            product.setSize(productRequest.getSize());
         }
 
-        product.setCategory(category.get());
+        if (productRequest.getIdCategory() != null) {
+            Optional<Category> category = categoriesRepository.findById(productRequest.getIdCategory());
+            if (category.isEmpty()) {
+                throw new CategoryNonexistentException();
+            }
+
+            product.setCategory(category.get());
+        }
+
         productRepository.save(product);
     }
 
@@ -102,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    public void reduceStockBy(Long id, int quantity) throws ProductNonexistentException, InsufficientStockException {
+    public void reduceStockBy(Long id, int quantity) throws ProductNonexistentException {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
             throw new ProductNonexistentException();
