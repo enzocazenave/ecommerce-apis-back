@@ -23,7 +23,7 @@ public interface ProductService {
     public List<Product> getProductsByCategoryId(Long id);  
     public Product createProduct(ProductRequest p) throws ProductDuplicateException;
     public void deleteProduct(Long id) throws ProductNonexistentException;
-    public void updateProduct(ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException;
+    public void updateProduct(Long id, ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException;
     public void deductStock(Long productId, int quantity) throws ProductNonexistentException, InsufficientStockException;
     public void reduceStockBy(Long id, int quantity) throws ProductNonexistentException, InsufficientStockException;
 }

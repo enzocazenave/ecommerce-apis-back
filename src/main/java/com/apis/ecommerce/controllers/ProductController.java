@@ -70,9 +70,9 @@ public class ProductController {
         return ResponseEntity.ok("Producto eliminado con exito");
     }
     
-    @PutMapping
-    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException, CategoryNonexistentException {
-        productsService.updateProduct(productUpdateRequest);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest productUpdateRequest) throws ProductNonexistentException, CategoryNonexistentException {
+        productsService.updateProduct(id, productUpdateRequest);
         return ResponseEntity.ok("Producto editado con exito");
     }
 }
