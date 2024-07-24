@@ -40,9 +40,6 @@ public class PurchaseOrdersController {
             if (purchasedProductRequest.getUnits() <= 0) {
                 throw new InvalidUnitsException();
             }
-            if (purchasedProductRequest.getPrice() < 0) {
-                throw new InvalidPriceException();
-            }
         }
 
         PurchaseOrder createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderRequest);
