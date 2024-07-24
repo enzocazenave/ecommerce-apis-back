@@ -42,13 +42,13 @@ public class ProductController {
         return ResponseEntity.ok(productsService.getProductsByCategoryId(id));
     }
 
-    @GetMapping("{nameProduct}")
+    @GetMapping("/productsByPrice")
+    public ResponseEntity<List<Product>> getProductsByPrice(@RequestParam(required = true) Double priceMin,@RequestParam(required = true) Double priceMax) {
+        return ResponseEntity.ok(productsService.getProductsByPrice(priceMin,priceMax));
+    }
+    @GetMapping("/search/{nameProduct}")
     public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String nameProduct) {
         return ResponseEntity.ok(productsService.getProductByName(nameProduct));
-    }
-    @GetMapping("/productsByPrice")
-    public ResponseEntity<List<Product>> getProductsByPirce(@PathVariable Double priceMin,@PathVariable Double priceMax) {
-        return ResponseEntity.ok(productsService.getProductsByPrice(priceMin,priceMax));
     }
 
     @GetMapping("/{id}")
