@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -57,6 +59,17 @@ public class ProductController {
 
         if (product.isPresent()) {
             return ResponseEntity.ok(product.get());
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/matching_sizes")
+    public ResponseEntity<List<Product>> getProductByIdAndSize(@PathVariable Long id) {
+        List<Product> products = productsService.getProductByIdAndSize(id);
+
+        if (!products.isEmpty()) {
+            return ResponseEntity.ok(products);
         }
 
         return ResponseEntity.noContent().build();
