@@ -31,6 +31,19 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(pageable);
     }
 
+    public List<Product> getProductByIdAndSize(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+
+        if (!product.isPresent()) {
+            return List.of();
+        }
+
+        Product mainProduct = product.get();
+        List<Product> products = productRepository.findByName(mainProduct.getName());
+
+        return products;
+    }
+
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
@@ -40,14 +53,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product createProduct(ProductRequest p) throws ProductDuplicateException {
-        if (!productRepository.findByName(p.getName()).isEmpty()) {
-            throw new ProductDuplicateException();
-        }
         Optional<Category> category = categoriesRepository.findById(p.getIdCategory());
-
         Product product = new Product(p.getName(), p.getStock(), p.getPrice(), p.getDescription(), p.getSize());
         product.setCategory(category.get());
-
         return productRepository.save(product);
     }
 
