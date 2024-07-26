@@ -75,6 +75,17 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}/matching_sizes_by_name")
+    public ResponseEntity<List<Product>> getProductByNameAndSize(@PathVariable String name) {
+        List<Product> products = productsService.getProductByNameAndSize(name);
+
+        if (!products.isEmpty()) {
+            return ResponseEntity.ok(products);
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody ProductRequest productRequest) throws ProductDuplicateException {
         if (productRequest.getPrice() <= 0) {

@@ -19,6 +19,7 @@ import com.apis.ecommerce.exceptions.ProductNonexistentException;
 public interface ProductService {
     public Page<Product> getProduct(PageRequest pageRequest);
     public List<Product> getProductByIdAndSize(Long id);
+    public List<Product> getProductByNameAndSize(String name);
     public Optional<Product> getProductById(Long id);
     public List<Product> getProductByName(String nombre);
     public List<Product> getProductsByCategoryId(Long id);  
