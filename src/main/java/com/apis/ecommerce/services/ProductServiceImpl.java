@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product mainProduct = product.get();
-        List<Product> products = productRepository.findByName(mainProduct.getName());
+        List<Product> products = productRepository.findByExactName(mainProduct.getName());
 
         return products;
     }
