@@ -13,4 +13,5 @@ public interface ProductImagesService {
     ProductImages uploadImage(Long productId, ProductImageUpload productImageUpload);
     List<ProductImages> getProductImages(Long productId);
     void deleteProductImages(Long imageId) throws ProductImagesNonexistentException;
+    void deleteAllProductImages(Long productId) throws ProductImagesNonexistentException;
 }

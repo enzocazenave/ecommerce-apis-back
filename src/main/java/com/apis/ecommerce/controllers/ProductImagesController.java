@@ -42,4 +42,10 @@ public class ProductImagesController {
         productImagesService.deleteProductImages(imageId);
         return ResponseEntity.ok("Imagen eliminada con exito");
     }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<String> deleteAllImages(@PathVariable Long productId) throws ProductImagesNonexistentException {
+        productImagesService.deleteAllProductImages(productId);
+        return ResponseEntity.ok("Imagenes eliminadas con exito");
+    }   
 }

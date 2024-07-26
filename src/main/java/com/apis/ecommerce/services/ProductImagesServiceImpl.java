@@ -41,4 +41,14 @@ public class ProductImagesServiceImpl implements ProductImagesService {
 
         productImagesRepository.deleteById(imageId);
     }
+
+    public void deleteAllProductImages(Long productId) throws ProductImagesNonexistentException {
+        List<ProductImages> productImages = productImagesRepository.findByProductId(productId);
+
+        if (productImages.isEmpty()) {
+            throw new ProductImagesNonexistentException();
+        }
+
+        productImagesRepository.deleteAll(productImages);
+    }   
 }
