@@ -3,6 +3,8 @@ package com.apis.ecommerce.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
 import com.apis.ecommerce.exceptions.InsufficientStockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,10 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findByExactName(mainProduct.getName());
 
         return products;
+    }
+
+    public List<Product> getProductByNameAndSize(String name) {
+        return productRepository.findByExactName(name);
     }
 
     public Optional<Product> getProductById(Long id) {
