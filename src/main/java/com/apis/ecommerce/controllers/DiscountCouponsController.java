@@ -64,6 +64,9 @@ public class DiscountCouponsController {
     @GetMapping("/code/{code}")
     public ResponseEntity<DiscountCoupon> getDiscountCouponByDiscountCode(@PathVariable String code) {
         Optional<DiscountCoupon>  discountCoupons = discountCouponService.getDiscountCouponByCode(code);
+        if (discountCoupons.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(discountCoupons.get());
     }
 }
