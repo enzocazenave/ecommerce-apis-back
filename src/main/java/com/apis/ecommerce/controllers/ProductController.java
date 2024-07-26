@@ -75,7 +75,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/matching_sizes_by_name")
+    @GetMapping("/{name}/matching_sizes_by_name")
     public ResponseEntity<List<Product>> getProductByNameAndSize(@PathVariable String name) {
         List<Product> products = productsService.getProductByNameAndSize(name);
 
