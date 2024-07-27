@@ -4,11 +4,13 @@ import com.apis.ecommerce.entities.PurchaseOrder;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
 import com.apis.ecommerce.exceptions.*;
+import com.apis.ecommerce.services.DiscountCouponsService;
 import com.apis.ecommerce.services.PurchaseOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Security;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class PurchaseOrdersController {
     @Autowired
     private PurchaseOrdersService purchaseOrderService;
+    @Autowired
+    private DiscountCouponsService discountCouponsService;
 
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseOrder> getPurchaseOrderById(Long id) {
@@ -43,6 +47,10 @@ public class PurchaseOrdersController {
             }
         }
 
+        Boolean hasCoupon = discountCouponsService.hasCuopons(purchaseOrderRequest.getDiscountCode());
+        if (!hasCoupon) {
+           return ResponseEntity.badRequest().build();
+        }
         PurchaseOrder createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderRequest);
         return ResponseEntity.ok(createdPurchaseOrder);
     }

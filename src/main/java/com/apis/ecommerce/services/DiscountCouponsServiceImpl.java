@@ -118,4 +118,17 @@ public class DiscountCouponsServiceImpl implements DiscountCouponsService {
 
         return discountCouponRepository.save(discountCoupon);
     }
+
+    public Boolean hasCuopons(String code){
+        Optional<DiscountCoupon> discountCouponOptional = discountCouponRepository.findByCode(code);
+        if (!discountCouponOptional.isPresent()) {
+            return false;
+        }
+        DiscountCoupon discountCoupon = discountCouponOptional.get();
+
+        if (discountCoupon.getAvailableQuantity()<= 0){
+            return false;
+        }
+        return true;
+    }
 }
