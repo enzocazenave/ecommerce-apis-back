@@ -1,6 +1,7 @@
 package com.apis.ecommerce.services;
 
 import com.apis.ecommerce.entities.*;
+import com.apis.ecommerce.entities.dto.ProductResponse;
 import com.apis.ecommerce.entities.dto.PurchaseOrderRequest;
 import com.apis.ecommerce.entities.dto.PurchasedProductRequest;
 import com.apis.ecommerce.enums.PurchaseOrderStatus;
@@ -43,12 +44,12 @@ public class PurchaseOrdersServiceImpl implements PurchaseOrdersService {
             Integer units = purchasedProductRequest.getUnits();
             Long productId = purchasedProductRequest.getProductId();
 
-            Optional<Product> productOptional = productService.getProductById(productId);
+            Optional<ProductResponse> productOptional = productService.getProductById(productId);
             if (productOptional.isEmpty()) {
                 throw new ProductNonexistentException();
             }
 
-            Product product = productOptional.get();
+            ProductResponse product = productOptional.get();
 
             if (product.getStock() < units) {
                 throw new InsufficientStockException();

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.apis.ecommerce.entities.Product;
 import com.apis.ecommerce.entities.dto.ProductRequest;
+import com.apis.ecommerce.entities.dto.ProductResponse;
 import com.apis.ecommerce.entities.dto.ProductUpdateRequest;
 import com.apis.ecommerce.exceptions.CategoryNonexistentException;
 import com.apis.ecommerce.exceptions.ProductDuplicateException;
@@ -17,13 +18,13 @@ import com.apis.ecommerce.exceptions.ProductNonexistentException;
 
 @Service
 public interface ProductService {
-    public Page<Product> getProduct(PageRequest pageRequest);
-    public List<Product> getProductByIdAndSize(Long id);
+    public List<ProductResponse> getProduct();
+    public List<ProductResponse> getProductByIdAndSize(Long id);
     public List<Product> getProductByNameAndSize(String name);
-    public Optional<Product> getProductById(Long id);
-    public List<Product> getProductByName(String nombre);
-    public List<Product> getProductsByCategoryId(Long id);  
-    public List<Product> getProductsByPrice(Double priceMin,Double priceMax );  
+    public Optional<ProductResponse> getProductById(Long id);
+    public List<ProductResponse> getProductByName(String nombre);
+    public List<ProductResponse> getProductsByCategoryId(Long id);  
+    public List<ProductResponse> getProductsByPrice(Double priceMin,Double priceMax );  
     public Product createProduct(ProductRequest p) throws ProductDuplicateException;
     public void deleteProduct(Long id) throws ProductNonexistentException;
     public void updateProduct(Long id, ProductUpdateRequest productRequest) throws ProductNonexistentException, CategoryNonexistentException;

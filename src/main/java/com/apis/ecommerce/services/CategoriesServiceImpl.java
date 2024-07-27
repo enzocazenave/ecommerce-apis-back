@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.Product;
+import com.apis.ecommerce.entities.dto.ProductResponse;
 import com.apis.ecommerce.exceptions.CategoryDuplicateException;
 import com.apis.ecommerce.exceptions.CategoryHasProductsException;
 import com.apis.ecommerce.repositories.CategoriesRepository;
@@ -43,7 +44,7 @@ public class CategoriesServiceImpl implements CategoriesService {
             return Optional.empty();
         }
 
-        List<Product> productsOfCategory = productService.getProductsByCategoryId(id);
+        List<ProductResponse> productsOfCategory = productService.getProductsByCategoryId(id);
 
         if (!productsOfCategory.isEmpty()) {
             throw new CategoryHasProductsException();
