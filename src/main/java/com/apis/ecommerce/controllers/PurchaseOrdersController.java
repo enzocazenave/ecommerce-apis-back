@@ -47,10 +47,14 @@ public class PurchaseOrdersController {
             }
         }
 
-        Boolean hasCoupon = discountCouponsService.hasCuopons(purchaseOrderRequest.getDiscountCode());
-        if (!hasCoupon) {
-           return ResponseEntity.badRequest().build();
+        String discountCode = purchaseOrderRequest.getDiscountCode();
+        if (discountCode != null && !discountCode.isEmpty()) {
+            Boolean hasCoupon = discountCouponsService.hasCuopons(purchaseOrderRequest.getDiscountCode());
+            if (!hasCoupon) {
+                return ResponseEntity.badRequest().build();
+            }
         }
+
         PurchaseOrder createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderRequest);
         return ResponseEntity.ok(createdPurchaseOrder);
     }
