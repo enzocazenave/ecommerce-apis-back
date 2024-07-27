@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apis.ecommerce.entities.Product;
 import com.apis.ecommerce.entities.dto.ProductRequest;
+import com.apis.ecommerce.entities.dto.ProductResponse;
 import com.apis.ecommerce.entities.dto.ProductUpdateRequest;
 import com.apis.ecommerce.services.ProductService;
 
@@ -33,29 +34,27 @@ public class ProductController {
     private ProductService productsService;
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getProducts(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
-        if (page == null || size == null)
-            return ResponseEntity.ok(productsService.getProduct(PageRequest.of(0, Integer.MAX_VALUE)));
-        return ResponseEntity.ok(productsService.getProduct(PageRequest.of(page, size)));
+    public ResponseEntity<List<ProductResponse>> getProducts() {
+        return ResponseEntity.ok(productsService.getProduct());
     }
 
     @GetMapping("/categories/{id}")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long id) {
+    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable Long id) {
         return ResponseEntity.ok(productsService.getProductsByCategoryId(id));
     }
 
     @GetMapping("/productsByPrice")
-    public ResponseEntity<List<Product>> getProductsByPrice(@RequestParam(required = true) Double priceMin,@RequestParam(required = true) Double priceMax) {
+    public ResponseEntity<List<ProductResponse>> getProductsByPrice(@RequestParam(required = true) Double priceMin,@RequestParam(required = true) Double priceMax) {
         return ResponseEntity.ok(productsService.getProductsByPrice(priceMin,priceMax));
     }
     @GetMapping("/search/{nameProduct}")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String nameProduct) {
+    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable String nameProduct) {
         return ResponseEntity.ok(productsService.getProductByName(nameProduct));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productsService.getProductById(id);
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        Optional<ProductResponse> product = productsService.getProductById(id);
 
         if (product.isPresent()) {
             return ResponseEntity.ok(product.get());
@@ -65,8 +64,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/matching_sizes")
-    public ResponseEntity<List<Product>> getProductByIdAndSize(@PathVariable Long id) {
-        List<Product> products = productsService.getProductByIdAndSize(id);
+    public ResponseEntity<List<ProductResponse>> getProductByIdAndSize(@PathVariable Long id) {
+        List<ProductResponse> products = productsService.getProductByIdAndSize(id);
 
         if (!products.isEmpty()) {
             return ResponseEntity.ok(products);
@@ -112,7 +111,7 @@ public class ProductController {
             throw new InvalidPriceException();
         }
 
-        if (productUpdateRequest.getStock() != null && productUpdateRequest.getStock() <= 0) {
+        if (productUpdateRequest.getStock() != null && productUpdateRequest.getStock() < 0) {
             throw new InvalidStockException();
         }
 

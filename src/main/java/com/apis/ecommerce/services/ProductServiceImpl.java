@@ -1,5 +1,6 @@
 package com.apis.ecommerce.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.apis.ecommerce.entities.Category;
 import com.apis.ecommerce.entities.Product;
+import com.apis.ecommerce.entities.ProductImages;
 import com.apis.ecommerce.entities.dto.ProductRequest;
+import com.apis.ecommerce.entities.dto.ProductResponse;
 import com.apis.ecommerce.entities.dto.ProductUpdateRequest;
 import com.apis.ecommerce.exceptions.CategoryNonexistentException;
 import com.apis.ecommerce.exceptions.ProductDuplicateException;
@@ -29,11 +32,18 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoriesRepository categoriesRepository;
 
-    public Page<Product> getProduct(PageRequest pageable) {
-        return productRepository.findAll(pageable);
+    @Autowired
+    private ProductImagesService productImagesService;
+
+    public List<ProductResponse> getProduct() {
+        List<Product> products = productRepository.findAll();
+        List<ProductResponse> productResponses = convertProductList(products);
+
+
+        return productResponses;
     }
 
-    public List<Product> getProductByIdAndSize(Long id) {
+    public List<ProductResponse> getProductByIdAndSize(Long id) {
         Optional<Product> product = productRepository.findById(id);
 
         if (!product.isPresent()) {
@@ -42,20 +52,39 @@ public class ProductServiceImpl implements ProductService {
 
         Product mainProduct = product.get();
         List<Product> products = productRepository.findByExactName(mainProduct.getName());
+        List<ProductResponse> productResponses = convertProductList(products);
 
-        return products;
+        return productResponses;
     }
 
     public List<Product> getProductByNameAndSize(String name) {
         return productRepository.findByExactName(name);
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Optional<ProductResponse> getProductById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
+            return Optional.empty();
+        }
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setId(product.get().getId());
+        productResponse.setName(product.get().getName());
+        productResponse.setStock(product.get().getStock());
+        productResponse.setPrice(product.get().getPrice());
+        productResponse.setDescription(product.get().getDescription());
+        productResponse.setSize(product.get().getSize());
+        productResponse.setIdCategory(product.get().getCategory().getId());
+        productResponse.setImages(productImagesService.getProductImages(product.get().getId()));
+
+        return Optional.of(productResponse);
     }
 
-    public List<Product> getProductsByCategoryId(Long id) {
-        return productRepository.findByCategoryId(id);
+    public List<ProductResponse> getProductsByCategoryId(Long id) {
+        List<Product> products = productRepository.findByCategoryId(id);
+        List<ProductResponse> productResponses = convertProductList(products);
+
+        return productResponses;
     }
 
     public Product createProduct(ProductRequest p) throws ProductDuplicateException {
@@ -139,12 +168,36 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    public List<Product> getProductByName(String nombre) {
-        return productRepository.findByName(nombre);
+    public List<ProductResponse> getProductByName(String nombre) {
+        List<Product> products = productRepository.findByName(nombre);
+        List<ProductResponse> productResponses = convertProductList(products);
+
+        return productResponses;
     }
 
-    public List<Product> getProductsByPrice(Double priceMin,Double priceMax ) {
-        return productRepository.findByPrice(priceMin,priceMax);
+    public List<ProductResponse> getProductsByPrice(Double priceMin,Double priceMax ) {
+        List<Product> products = productRepository.findByPrice(priceMin,priceMax);
+        List<ProductResponse> productResponses = convertProductList(products);
+
+        return productResponses;
     }
 
+    public List<ProductResponse> convertProductList(List<Product> products) {
+        List<ProductResponse> productResponses = new ArrayList<>();
+
+        for (Product product : products) {
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setId(product.getId());
+            productResponse.setName(product.getName());
+            productResponse.setStock(product.getStock());
+            productResponse.setPrice(product.getPrice());
+            productResponse.setDescription(product.getDescription());
+            productResponse.setSize(product.getSize());
+            productResponse.setIdCategory(product.getCategory().getId());
+            productResponse.setImages(productImagesService.getProductImages(product.getId()));
+            productResponses.add(productResponse);
+        }
+
+        return productResponses;
+    }
 }
